@@ -1,4 +1,3 @@
-import React from 'react';
 import SlideUp from '@/components/animations/SlideUp';
 import { cn } from '@/utils/cn';
 
@@ -9,7 +8,7 @@ const SectionHeader = ({ number, title, subtitle, align = 'left', className }) =
   return (
     <SlideUp>
       <div className={cn(
-        "mb-16",
+        "mb-12",
         isRight && "text-right",
         isCenter && "text-center",
         className

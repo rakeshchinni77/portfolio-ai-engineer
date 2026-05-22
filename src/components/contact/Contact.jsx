@@ -1,8 +1,6 @@
-import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Mail, MapPin, Send } from 'lucide-react';
 import { socials } from '@/constants/socials';
-import SlideUp from '@/components/animations/SlideUp';
 import StaggerContainer from '@/components/animations/StaggerContainer';
 import SectionHeader from '@/components/common/SectionHeader';
 import GlassCard from '@/components/ui/GlassCard';
@@ -31,7 +29,7 @@ const Contact = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -52,7 +50,7 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden">
+    <section id="contact" className="py-20 relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute bottom-[-20%] left-[50%] -translate-x-1/2 w-[60%] h-[50%] rounded-full bg-primary/10 blur-[120px] pointer-events-none"></div>
       
@@ -97,10 +95,10 @@ const Contact = () => {
           
           {/* Contact Form */}
           <motion.div 
-            initial={{ opacity: 0, y: shouldReduce ? 0 : 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: shouldReduce ? 1 : 0.96, y: shouldReduce ? 0 : 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="lg:col-span-3"
           >
             <form className="glass p-8 flex flex-col gap-6">

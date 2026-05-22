@@ -1,0 +1,170 @@
+import { useState, useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
+import { Brain, Database } from 'lucide-react';
+import { FaPython, FaReact, FaDocker, FaGithub } from 'react-icons/fa';
+import { SiTensorflow, SiPytorch, SiFastapi, SiHuggingface } from 'react-icons/si';
+
+const techItems = [
+  { name: 'Python', icon: FaPython, color: '#3776AB', radius: 120, tilt: 0, speed: 0.007, phase: 0 },
+  { name: 'TensorFlow', icon: SiTensorflow, color: '#FF9900', radius: 110, tilt: 35, speed: -0.005, phase: 1.2 },
+  { name: 'PyTorch', icon: SiPytorch, color: '#EE4C2C', radius: 115, tilt: -30, speed: 0.006, phase: 2.4 },
+  { name: 'LangChain', icon: Brain, color: '#1C3C3A', radius: 125, tilt: 55, speed: -0.004, phase: 3.6 },
+  { name: 'Docker', icon: FaDocker, color: '#2496ED', radius: 130, tilt: -50, speed: 0.005, phase: 4.8 },
+  { name: 'React', icon: FaReact, color: '#61DAFB', radius: 105, tilt: 45, speed: -0.006, phase: 0.5 },
+  { name: 'FastAPI', icon: SiFastapi, color: '#009688', radius: 110, tilt: -40, speed: 0.007, phase: 1.8 },
+  { name: 'Hugging Face', icon: SiHuggingface, color: '#FFD21E', radius: 120, tilt: 20, speed: -0.005, phase: 3.0 },
+  { name: 'FAISS', icon: Database, color: '#8b5cf6', radius: 115, tilt: -15, speed: 0.006, phase: 4.2 },
+  { name: 'GitHub', icon: FaGithub, color: '#FFFFFF', radius: 135, tilt: 70, speed: -0.003, phase: 5.4 }
+];
+
+const TechSphere = () => {
+  const containerRef = useRef(null);
+  const shouldReduce = useReducedMotion();
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [targetMousePos, setTargetMousePos] = useState({ x: 0, y: 0 });
+  const [angles, setAngles] = useState(techItems.map(item => item.phase));
+
+  // Handle mouse move for parallax
+  const handleMouseMove = (e) => {
+    if (shouldReduce) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setTargetMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setTargetMousePos({ x: 0, y: 0 });
+  };
+
+  // Animation Loop (Orbit + Mouse Easing)
+  useEffect(() => {
+    let animFrame;
+    
+    const update = () => {
+      // Ease mouse position for organic delay feel
+      if (!shouldReduce) {
+        setMousePos(prev => ({
+          x: prev.x + (targetMousePos.x - prev.x) * 0.08,
+          y: prev.y + (targetMousePos.y - prev.y) * 0.08
+        }));
+      }
+
+      // Increment angles
+      setAngles(prev => 
+        prev.map((angle, idx) => {
+          const item = techItems[idx];
+          // If reduced motion is active, don't increment
+          const speed = shouldReduce ? 0 : item.speed;
+          return angle + speed;
+        })
+      );
+
+      animFrame = requestAnimationFrame(update);
+    };
+
+    animFrame = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(animFrame);
+  }, [targetMousePos, shouldReduce]);
+
+  return (
+    <div 
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full aspect-square max-w-[340px] md:max-w-[400px] mx-auto flex items-center justify-center dashboard-card p-6 border-white/5 rounded-3xl bg-[#09061a]/30 backdrop-blur-xl shadow-glow-primary/10 overflow-hidden cursor-pointer select-none group/sphere"
+    >
+      {/* Moving Grid Background */}
+      <div className="absolute inset-0 bg-grid opacity-10 animate-grid-slow pointer-events-none" />
+      
+      {/* Outer subtle glowing ring */}
+      <div className="absolute w-4/5 h-4/5 rounded-full border border-white/5 pointer-events-none flex items-center justify-center animate-spin" style={{ animationDuration: '60s' }}>
+        <div className="absolute top-0 w-2 h-2 rounded-full bg-secondary/30 blur-[2px]" />
+      </div>
+
+      {/* Central Engine Core */}
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        {/* Pulsing Core Glow */}
+        <div className="absolute w-24 h-24 rounded-full bg-gradient-to-r from-primary/30 to-secondary/30 border border-white/5 blur-xl group-hover/sphere:scale-110 transition-transform duration-700" />
+        
+        {/* Core Card */}
+        <div className="relative w-16 h-16 rounded-full bg-black/40 border border-white/10 flex items-center justify-center shadow-[0_0_25px_rgba(139,92,246,0.2)] backdrop-blur-md">
+          <Brain className="w-8 h-8 text-primary-light animate-pulse" />
+        </div>
+        <span className="text-[10px] font-mono tracking-widest text-gray-400 mt-3 font-semibold bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">
+          AI CORE
+        </span>
+      </div>
+
+      {/* Orbiting Tech Items */}
+      {techItems.map((item, idx) => {
+        const angle = angles[idx];
+        const rad = angle;
+        const tiltRad = (item.tilt * Math.PI) / 180;
+
+        // 3D coordinates on virtual sphere
+        const X = item.radius * Math.cos(rad);
+        const yFlat = item.radius * Math.sin(rad);
+        
+        // Rotate around X-axis by tilt angle
+        const Y = yFlat * Math.cos(tiltRad);
+        const Z = yFlat * Math.sin(tiltRad);
+
+        // Project to 2D
+        // Z values range from -radius to +radius. Normalize to 0.4 (back) - 1.1 (front)
+        const depth = (Z + item.radius) / (2 * item.radius);
+        const scale = 0.5 + depth * 0.6; // Scale ranges from 0.5 to 1.1
+        const opacity = 0.35 + depth * 0.65; // Opacity ranges from 0.35 to 1.0
+        const zIndex = Math.round(scale * 100);
+        const blurValue = shouldReduce ? 0 : Math.max(0, (1 - scale) * 4.5);
+
+        // Parallax translation based on depth scale (front items move more)
+        const xParallax = mousePos.x * 60 * scale;
+        const yParallax = mousePos.y * 60 * scale;
+
+        const left = `calc(50% + ${X + xParallax}px)`;
+        const top = `calc(50% + ${Y + yParallax}px)`;
+
+        const Icon = item.icon;
+
+        return (
+          <div
+            key={item.name}
+            style={{
+              position: 'absolute',
+              left,
+              top,
+              transform: `translate(-50%, -50%) scale(${scale})`,
+              opacity,
+              zIndex,
+              filter: `blur(${blurValue}px)`,
+              transition: 'filter 0.3s ease',
+              pointerEvents: 'none'
+            }}
+            className="flex flex-col items-center gap-1.5"
+          >
+            {/* Tech Node Badge */}
+            <div 
+              style={{ 
+                borderColor: `${item.color}33`,
+                boxShadow: `0 0 15px ${item.color}15, inset 0 1px 1px rgba(255, 255, 255, 0.05)`
+              }}
+              className="w-10 h-10 rounded-xl bg-black/60 border flex items-center justify-center backdrop-blur-md"
+            >
+              <Icon style={{ color: item.color }} className="w-5 h-5" />
+            </div>
+
+            {/* Micro Badge Text */}
+            <span 
+              className="text-[8px] font-mono text-gray-400 bg-black/80 px-1.5 py-0.5 rounded border border-white/5 shadow-md pointer-events-none"
+            >
+              {item.name}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default TechSphere;

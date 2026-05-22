@@ -8,30 +8,57 @@ import { heroData } from '@/constants/heroData';
 import FloatingElement from '@/components/animations/FloatingElement';
 import Button from '@/components/ui/Button';
 
+const ambientParticles = [
+  { id: 1, size: 2, top: "20%", left: "15%", delay: 0.2, duration: 12, depth: "far" },
+  { id: 2, size: 3, top: "35%", left: "85%", delay: 1.5, duration: 16, depth: "near" },
+  { id: 3, size: 1.5, top: "60%", left: "10%", delay: 2.1, duration: 14, depth: "far" },
+  { id: 4, size: 2.5, top: "75%", left: "75%", delay: 0.8, duration: 18, depth: "near" },
+  { id: 5, size: 2, top: "45%", left: "25%", delay: 3.0, duration: 15, depth: "far" },
+  { id: 6, size: 3, top: "15%", left: "70%", delay: 1.0, duration: 20, depth: "near" },
+  { id: 7, size: 1.5, top: "80%", left: "40%", delay: 4.2, duration: 13, depth: "far" },
+  { id: 8, size: 2, top: "50%", left: "60%", delay: 2.5, duration: 17, depth: "near" },
+];
+
 const Hero = () => {
   const [keywordIndex, setKeywordIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const shouldReduce = useReducedMotion();
+
+  // Find the longest keyword to size the container dynamically and prevent layout shifts
+  const longestKeyword = heroData.rotatingKeywords.reduce(
+    (longest, current) => (current.length > longest.length ? current : longest),
+    ""
+  );
 
   // Scroll parallax hooks using Framer Motion's native useScroll & useTransform
   const { scrollY } = useScroll();
   
-  // Parallax speed transformations for background elements
-  const gridY = useTransform(scrollY, [0, 1000], [0, 120]);
-  const orbY1 = useTransform(scrollY, [0, 1000], [0, 150]);
-  const orbY2 = useTransform(scrollY, [0, 1000], [0, 80]);
-  const orbY3 = useTransform(scrollY, [0, 1000], [0, 180]);
+  // 1. Restrained parallax speed transformations for background elements
+  const gridY = useTransform(scrollY, [0, 1000], [0, 35]);
+  const orbY1 = useTransform(scrollY, [0, 1000], [0, 50]);
+  const orbY2 = useTransform(scrollY, [0, 1000], [0, 35]);
+  const orbY3 = useTransform(scrollY, [0, 1000], [0, 60]);
   
-  // Parallax speed transformations for floating icons (simulating 3D depth)
-  const yPython = useTransform(scrollY, [0, 1000], [0, -180]);
-  const yPytorch = useTransform(scrollY, [0, 1000], [0, -280]);
-  const yTensorflow = useTransform(scrollY, [0, 1000], [0, -120]);
-  const yReact = useTransform(scrollY, [0, 1000], [0, -220]);
-  const yDocker = useTransform(scrollY, [0, 1000], [0, -90]);
-  const yFastapi = useTransform(scrollY, [0, 1000], [0, -150]);
+  // Parallax speed transformations for floating icons (restrained opposing movement)
+  const yPython = useTransform(scrollY, [0, 1000], [0, -35]);
+  const yPytorch = useTransform(scrollY, [0, 1000], [0, -65]);
+  const yTensorflow = useTransform(scrollY, [0, 1000], [0, -25]);
+  const yReact = useTransform(scrollY, [0, 1000], [0, -50]);
+  const yDocker = useTransform(scrollY, [0, 1000], [0, -20]);
+  const yFastapi = useTransform(scrollY, [0, 1000], [0, -30]);
+
+  // Parallax transforms for particles
+  const yPartFar = useTransform(scrollY, [0, 1000], [0, 25]);
+  const yPartNear = useTransform(scrollY, [0, 1000], [0, 70]);
   
-  // Content container parallax & fade out on scroll
-  const contentY = useTransform(scrollY, [0, 1000], [0, 60]);
-  const opacityFade = useTransform(scrollY, [0, 800], [1, 0]);
+  // 5. Ambient orbs dynamic opacity shifts on scroll (environmental lighting)
+  const orbOpacity1 = useTransform(scrollY, [0, 900], [0.15, 0.02]);
+  const orbOpacity2 = useTransform(scrollY, [0, 900], [0.12, 0.02]);
+  const orbOpacity3 = useTransform(scrollY, [0, 900], [0.08, 0.01]);
+
+  // Content container parallax & fade out on scroll (restrained translation)
+  const contentY = useTransform(scrollY, [0, 1000], [0, 20]);
+  const opacityFade = useTransform(scrollY, [0, 900], [1, 0]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,6 +66,16 @@ const Hero = () => {
     }, 3000);
     return () => clearInterval(interval);
   }, []);
+
+  // Monitor resize to apply mobile optimization (slice particles list)
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const activeParticles = isMobile ? ambientParticles.slice(0, 3) : ambientParticles;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -90,95 +127,133 @@ const Hero = () => {
   return (
     <section id="home" className="min-h-[100svh] flex items-center justify-center relative overflow-hidden py-16 md:py-24 pointer-events-none">
       
-      {/* 1 & 2. Moving Grid Background & Layered Parallax Background */}
+      {/* 3. Layered Double-Grid System (Static base + radial fading moving parallax grid) */}
+      <div className="absolute inset-0 bg-grid opacity-[0.03] z-0 pointer-events-none"></div>
+      
       <motion.div 
-        style={{ y: shouldReduce ? 0 : gridY, opacity: shouldReduce ? 0.3 : opacityFade }} 
+        style={{ y: shouldReduce ? 0 : gridY, opacity: shouldReduce ? 0.05 : opacityFade }} 
         className="absolute inset-0 z-0 pointer-events-none"
       >
-        <div className="absolute inset-0 bg-grid animate-grid-slow opacity-[0.08]"></div>
+        <div className="absolute inset-0 bg-grid animate-grid-slow mask-radial-fade opacity-[0.07]"></div>
       </motion.div>
 
-      {/* Layered Animated Ambient Orbs */}
+      {/* 4. Refined Orb Motion & Blur Profile Layers */}
       <motion.div
-        style={{ y: shouldReduce ? 0 : orbY1, opacity: shouldReduce ? 0.15 : opacityFade }}
+        style={{ 
+          y: shouldReduce ? 0 : orbY1, 
+          opacity: shouldReduce ? 0.06 : orbOpacity1 
+        }}
         animate={shouldReduce ? {} : {
-          x: [-20, 20, -20],
-          y: [-25, 25, -25],
-          scale: [1, 1.1, 1]
+          x: [-12, 12, -12],
+          y: [-15, 15, -15],
+          scale: [1, 1.06, 1]
         }}
         transition={{
-          duration: 15,
+          duration: 16,
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[10%] left-[5%] w-[280px] md:w-[450px] h-[280px] md:h-[450px] rounded-full bg-primary/10 blur-[110px] pointer-events-none z-0"
+        className="absolute top-[8%] left-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-primary/10 blur-[100px] pointer-events-none z-0"
       />
 
       <motion.div
-        style={{ y: shouldReduce ? 0 : orbY2, opacity: shouldReduce ? 0.15 : opacityFade }}
-        animate={shouldReduce ? {} : {
-          x: [25, -25, 25],
-          y: [20, -20, 20],
-          scale: [1.1, 0.9, 1.1]
+        style={{ 
+          y: shouldReduce ? 0 : orbY2, 
+          opacity: shouldReduce ? 0.06 : orbOpacity2 
         }}
-        transition={{
-          duration: 18,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute bottom-[10%] right-[5%] w-[280px] md:w-[450px] h-[280px] md:h-[450px] rounded-full bg-secondary/10 blur-[110px] pointer-events-none z-0"
-      />
-
-      <motion.div
-        style={{ y: shouldReduce ? 0 : orbY3, opacity: shouldReduce ? 0.08 : opacityFade }}
         animate={shouldReduce ? {} : {
           x: [15, -15, 15],
-          y: [-15, 15, -15],
+          y: [12, -12, 12],
+          scale: [1.08, 0.95, 1.08]
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute bottom-[8%] right-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-secondary/8 blur-[130px] pointer-events-none z-0"
+      />
+
+      <motion.div
+        style={{ 
+          y: shouldReduce ? 0 : orbY3, 
+          opacity: shouldReduce ? 0.04 : orbOpacity3 
+        }}
+        animate={shouldReduce ? {} : {
+          x: [10, -10, 10],
+          y: [-10, 10, -10],
           scale: [0.95, 1.05, 0.95]
         }}
         transition={{
-          duration: 22,
+          duration: 24,
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[35%] left-[20%] w-[220px] md:w-[350px] h-[220px] md:h-[350px] rounded-full bg-indigo-500/5 blur-[95px] pointer-events-none z-0"
+        className="absolute top-[35%] left-[25%] w-[200px] md:w-[320px] h-[200px] md:h-[320px] rounded-full bg-indigo-500/6 blur-[80px] pointer-events-none z-0"
       />
 
-      {/* 3. Floating Technology Elements (hidden on mobile/reduced-motion for visual cleanliness) */}
+      {/* 2 & 6. Floating Ambient Particles (lightweight, restricted on mobile) */}
+      {!shouldReduce && activeParticles.map((p) => (
+        <motion.div
+          key={p.id}
+          style={{
+            top: p.top,
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            y: shouldReduce ? 0 : (p.depth === "near" ? yPartNear : yPartFar),
+            opacity: opacityFade
+          }}
+          animate={shouldReduce ? {} : {
+            x: [-6, 6, -6],
+            y: [-10, 10, -10],
+            opacity: [0.04, 0.12, 0.04]
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: p.delay
+          }}
+          className="absolute rounded-full bg-secondary/30 pointer-events-none z-10"
+        />
+      ))}
+
+      {/* Floating Technology Elements (restrained parallax speeds, hidden on mobile) */}
       {!shouldReduce && (
         <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none hidden sm:block">
           <motion.div style={{ y: yPython, opacity: opacityFade }}>
-            <FloatingElement className="top-[22%] left-[6%] md:left-[15%] p-3 md:p-4 glass rounded-full opacity-25 md:opacity-35 blur-[0.5px] scale-90 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={0} duration={7}>
+            <FloatingElement className="top-[22%] left-[6%] md:left-[15%] p-3 md:p-4 glass rounded-full opacity-20 sm:opacity-30 blur-[0.5px] scale-90 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={0} duration={7}>
               <FaPython className="text-xl md:text-2xl text-secondary" />
             </FloatingElement>
           </motion.div>
 
           <motion.div style={{ y: yPytorch, opacity: opacityFade }}>
-            <FloatingElement className="top-[14%] right-[6%] md:right-[20%] p-3 md:p-4 glass rounded-full opacity-30 md:opacity-40 scale-105 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={1} duration={8}>
+            <FloatingElement className="top-[14%] right-[6%] md:right-[20%] p-3 md:p-4 glass rounded-full opacity-25 sm:opacity-35 scale-105 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={1} duration={8}>
               <SiPytorch className="text-xl md:text-2xl text-secondary" />
             </FloatingElement>
           </motion.div>
 
           <motion.div style={{ y: yTensorflow, opacity: opacityFade }}>
-            <FloatingElement className="bottom-[32%] left-[6%] md:left-[18%] p-2 md:p-3 glass rounded-full opacity-15 md:opacity-25 blur-[1px] scale-75 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={2} duration={6.5}>
+            <FloatingElement className="bottom-[32%] left-[6%] md:left-[18%] p-2 md:p-3 glass rounded-full opacity-10 sm:opacity-20 blur-[1px] scale-75 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={2} duration={6.5}>
               <SiTensorflow className="text-lg md:text-xl text-secondary" />
             </FloatingElement>
           </motion.div>
 
           <motion.div style={{ y: yReact, opacity: opacityFade }}>
-            <FloatingElement className="bottom-[28%] right-[6%] md:right-[22%] p-3 md:p-4 glass rounded-full opacity-35 md:opacity-45 scale-110 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={1.5} duration={7.5}>
+            <FloatingElement className="bottom-[28%] right-[6%] md:right-[22%] p-3 md:p-4 glass rounded-full opacity-30 sm:opacity-40 scale-110 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={1.5} duration={7.5}>
               <FaReact className="text-xl md:text-2xl text-secondary" />
             </FloatingElement>
           </motion.div>
 
           <motion.div style={{ y: yDocker, opacity: opacityFade }} className="hidden md:block">
-            <FloatingElement className="top-[48%] right-[12%] p-3 glass rounded-full opacity-20 blur-[0.8px] scale-85 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={0.5} duration={9}>
+            <FloatingElement className="top-[48%] right-[12%] p-3 glass rounded-full opacity-15 blur-[0.8px] scale-85 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={0.5} duration={9}>
               <FaDocker className="text-xl text-secondary" />
             </FloatingElement>
           </motion.div>
 
           <motion.div style={{ y: yFastapi, opacity: opacityFade }} className="hidden md:block">
-            <FloatingElement className="bottom-[48%] left-[10%] p-4 glass rounded-full opacity-25 scale-100 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={2.5} duration={8.5}>
+            <FloatingElement className="bottom-[48%] left-[10%] p-4 glass rounded-full opacity-20 scale-100 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={2.5} duration={8.5}>
               <SiFastapi className="text-2xl text-secondary" />
             </FloatingElement>
           </motion.div>
@@ -202,7 +277,7 @@ const Hero = () => {
           <span className="text-sm font-mono text-gray-300">{heroData.badge}</span>
         </motion.div>
 
-        {/* 7. Glow Pulse backdrop directly behind the heading */}
+        {/* Glow Pulse backdrop directly behind the heading */}
         <motion.div
           style={{ opacity: shouldReduce ? 0 : opacityFade }}
           animate={shouldReduce ? {} : {
@@ -243,7 +318,11 @@ const Hero = () => {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 font-mono text-sm text-secondary mt-6">
             <span>Specializing in:</span>
-            <span className="relative inline-block h-6 overflow-hidden min-w-[160px] xs:min-w-[200px] sm:min-w-[240px] text-center">
+            <span className="relative inline-flex items-center justify-start h-6 overflow-hidden text-left pl-0 pr-4 flex-shrink-0">
+              {/* Invisible placeholder to establish the stable width of the container dynamically */}
+              <span className="invisible font-bold whitespace-nowrap select-none pointer-events-none text-left">
+                {longestKeyword}
+              </span>
               <AnimatePresence mode="wait">
                 <motion.span
                   key={keywordIndex}
@@ -251,7 +330,7 @@ const Hero = () => {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: shouldReduce ? 0 : -20, opacity: 0 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="absolute left-1/2 -translate-x-1/2 inline-block text-primary font-bold text-glow whitespace-nowrap"
+                  className="absolute left-0 inline-block text-primary font-bold text-glow whitespace-nowrap text-left"
                 >
                   {heroData.rotatingKeywords[keywordIndex]}
                 </motion.span>
@@ -260,7 +339,7 @@ const Hero = () => {
           </div>
         </motion.div>
 
-        {/* 6. Premium CTA Buttons with Glow & Lift Hover Effects */}
+        {/* Premium CTA Buttons with Glow & Lift Hover Effects */}
         <motion.div variants={ctaVariants} className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 justify-center w-full max-w-xs sm:max-w-none mx-auto">
           <Button 
             as={motion.a} 

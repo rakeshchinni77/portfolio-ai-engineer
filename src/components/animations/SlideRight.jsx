@@ -1,15 +1,18 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const StaggerContainer = ({ children, delayChildren = 0, staggerChildren = 0.1, className = "", isChild = false }) => {
+const SlideRight = ({ children, delay = 0, duration = 0.6, xOffset = 30, className = "", isChild = false }) => {
   const shouldReduce = useReducedMotion();
 
   const variants = {
-    hidden: {},
-    visible: {
+    hidden: { opacity: 0, x: shouldReduce ? 0 : xOffset },
+    visible: { 
+      opacity: 1, 
+      x: 0,
       transition: {
-        delayChildren: shouldReduce ? 0 : delayChildren,
-        staggerChildren: shouldReduce ? 0 : staggerChildren
+        duration: shouldReduce ? 0 : duration,
+        delay: shouldReduce ? 0 : delay,
+        ease: [0.16, 1, 0.3, 1] // Premium ease-out
       }
     }
   };
@@ -27,4 +30,4 @@ const StaggerContainer = ({ children, delayChildren = 0, staggerChildren = 0.1, 
   );
 };
 
-export default StaggerContainer;
+export default SlideRight;
