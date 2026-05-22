@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import { forwardRef } from 'react';
 import { cn } from '@/utils/cn';
 
 const GlassCard = forwardRef(({ children, className, as: Component = 'div', ...props }, ref) => {

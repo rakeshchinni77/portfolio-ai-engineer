@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const StaggerContainer = ({ children, delayChildren = 0, staggerChildren = 0.1, className = "", isChild = false }) => {

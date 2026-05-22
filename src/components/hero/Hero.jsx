@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Terminal } from 'lucide-react';
+import { ArrowRight, Terminal, Loader2, Check } from 'lucide-react';
 import { FaPython, FaReact, FaDocker } from 'react-icons/fa';
 import { SiTensorflow, SiPytorch, SiFastapi } from 'react-icons/si';
 
@@ -21,8 +21,21 @@ const ambientParticles = [
 
 const Hero = () => {
   const [keywordIndex, setKeywordIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 640 : false);
+  const [downloadStatus, setDownloadStatus] = useState('idle');
+  const [showTooltip, setShowTooltip] = useState(false);
   const shouldReduce = useReducedMotion();
+
+  const handleDownload = () => {
+    if (downloadStatus !== 'idle') return;
+    setDownloadStatus('downloading');
+    setTimeout(() => {
+      setDownloadStatus('success');
+      setTimeout(() => {
+        setDownloadStatus('idle');
+      }, 2000);
+    }, 1500);
+  };
 
   // Find the longest keyword to size the container dynamically and prevent layout shifts
   const longestKeyword = heroData.rotatingKeywords.reduce(
@@ -69,7 +82,6 @@ const Hero = () => {
 
   // Monitor resize to apply mobile optimization (slice particles list)
   useEffect(() => {
-    setIsMobile(window.innerWidth < 640);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -93,7 +105,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -102,7 +114,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 1.0, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 1.0, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -111,7 +123,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
+      transition: { duration: shouldReduce ? 0 : 0.8, ease: "easeOut" }
     }
   };
 
@@ -120,7 +132,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, ease: "easeOut" }
+      transition: { duration: shouldReduce ? 0 : 0.8, ease: "easeOut" }
     }
   };
 
@@ -148,7 +160,7 @@ const Hero = () => {
           y: [-15, 15, -15],
           scale: [1, 1.06, 1]
         }}
-        transition={{
+        transition={shouldReduce ? {} : {
           duration: 16,
           repeat: Infinity,
           ease: "easeInOut"
@@ -166,7 +178,7 @@ const Hero = () => {
           y: [12, -12, 12],
           scale: [1.08, 0.95, 1.08]
         }}
-        transition={{
+        transition={shouldReduce ? {} : {
           duration: 20,
           repeat: Infinity,
           ease: "easeInOut"
@@ -184,7 +196,7 @@ const Hero = () => {
           y: [-10, 10, -10],
           scale: [0.95, 1.05, 0.95]
         }}
-        transition={{
+        transition={shouldReduce ? {} : {
           duration: 24,
           repeat: Infinity,
           ease: "easeInOut"
@@ -359,24 +371,67 @@ const Hero = () => {
               {heroData.ctas.primary.label} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </span>
           </Button>
-          <Button 
-            as={motion.a} 
-            href={heroData.ctas.secondary.href} 
-            target={heroData.ctas.secondary.target} 
-            variant="glass" 
-            size="lg" 
-            className="flex items-center gap-2 justify-center cursor-pointer"
-            whileHover={shouldReduce ? {} : { 
-              y: -4, 
-              scale: 1.02, 
-              boxShadow: "0 0 25px rgba(6, 182, 212, 0.4)",
-              transition: { duration: 0.2, ease: "easeOut" }
-            }}
-            whileTap={shouldReduce ? {} : { y: 0, scale: 0.98 }}
-          >
-            <Terminal size={18} className="text-secondary" />
-            {heroData.ctas.secondary.label}
-          </Button>
+          <div className="relative inline-block w-full sm:w-auto">
+            {/* Tooltip */}
+            <AnimatePresence>
+              {showTooltip && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 pointer-events-none z-30 hidden sm:block"
+                >
+                  <div className="bg-[#030014]/90 backdrop-blur-md px-3 py-1.5 rounded-md text-xs font-mono text-secondary whitespace-nowrap shadow-glow-secondary border border-secondary/20">
+                    Resume PDF • Updated 2026
+                  </div>
+                  {/* Tooltip arrow */}
+                  <div className="w-2 h-2 bg-[#030014]/90 border-r border-b border-secondary/20 rotate-45 absolute top-full left-1/2 -translate-x-1/2 -translate-y-1"></div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <Button 
+              as={motion.a} 
+              href={heroData.ctas.secondary.href} 
+              download="Rakesh_AI_Engineer_Resume.pdf"
+              target="_blank" 
+              rel="noopener noreferrer"
+              variant="glass" 
+              size="lg" 
+              className="flex items-center gap-2 justify-center cursor-pointer w-full sm:w-auto group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              aria-label="Download Rakesh's Resume in PDF format"
+              onMouseEnter={() => setShowTooltip(true)}
+              onMouseLeave={() => setShowTooltip(false)}
+              onClick={handleDownload}
+              whileHover={shouldReduce ? {} : { 
+                y: -4, 
+                scale: 1.02, 
+                boxShadow: "0 0 25px rgba(6, 182, 212, 0.4)",
+                transition: { duration: 0.2, ease: "easeOut" }
+              }}
+              whileTap={shouldReduce ? {} : { y: 0, scale: 0.98 }}
+            >
+              {downloadStatus === 'idle' && (
+                <>
+                  <Terminal size={18} className="text-secondary group-hover:-translate-y-0.5 group-hover:scale-105 transition-transform duration-300 ease-out" />
+                  <span>{heroData.ctas.secondary.label}</span>
+                </>
+              )}
+              {downloadStatus === 'downloading' && (
+                <>
+                  <Loader2 size={18} className="text-secondary animate-spin" />
+                  <span>Downloading...</span>
+                </>
+              )}
+              {downloadStatus === 'success' && (
+                <>
+                  <Check size={18} className="text-emerald-400 animate-bounce" />
+                  <span className="text-emerald-400">Resume Saved!</span>
+                </>
+              )}
+            </Button>
+          </div>
         </motion.div>
       </motion.div>
     </section>

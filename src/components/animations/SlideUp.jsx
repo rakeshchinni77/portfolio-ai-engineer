@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const SlideUp = ({ children, delay = 0, duration = 0.6, yOffset = 40, className = "", isChild = false }) => {

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
 import { navLinks } from '@/constants/navLinks';
-import Button from '@/components/ui/Button';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -35,9 +34,6 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
-          <Button as="a" href="#projects" variant="navGlow" size="md">
-            View Work
-          </Button>
         </div>
 
         {/* Mobile Menu Button */}

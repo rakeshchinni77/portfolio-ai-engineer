@@ -11,11 +11,13 @@ export const heroData = {
     "Intelligent Systems"
   ],
   descriptionSegments: [
-    { text: "I build intelligent systems and modern interfaces. Bridging the gap between " },
-    { text: " machine learning models", highlight: true },
-    { text: " and " },
-    { text: " human-centric web experiences", highlight: true },
-    { text: "." }
+    { text: "Building " },
+    { text: "production-ready AI systems", highlight: true },
+    { text: ", " },
+    { text: "LLM-powered applications", highlight: true },
+    { text: ", and " },
+    { text: "immersive web experiences", highlight: true },
+    { text: " that bridge intelligent automation with real-world usability." }
   ],
   ctas: {
     primary: {
@@ -24,7 +26,7 @@ export const heroData = {
     },
     secondary: {
       label: "Download Resume",
-      href: "/resume.pdf",
+      href: "/resume/Rakesh_Ai_Engineer_Resume.pdf",
       target: "_blank"
     }
   }

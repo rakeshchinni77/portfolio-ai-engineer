@@ -7,22 +7,22 @@ const Experience = () => {
   const shouldReduce = useReducedMotion();
 
   const cardVariantsRight = {
-    hidden: { opacity: 0, x: shouldReduce ? 0 : 30, y: 15 },
+    hidden: { opacity: 0, x: shouldReduce ? 0 : 30, y: shouldReduce ? 0 : 15 },
     visible: { 
       opacity: 1, 
       x: 0,
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
   const cardVariantsLeft = {
-    hidden: { opacity: 0, x: shouldReduce ? 0 : -30, y: 15 },
+    hidden: { opacity: 0, x: shouldReduce ? 0 : -30, y: shouldReduce ? 0 : 15 },
     visible: { 
       opacity: 1, 
       x: 0,
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -30,7 +30,7 @@ const Experience = () => {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15
+        staggerChildren: shouldReduce ? 0 : 0.15
       }
     }
   };
@@ -41,7 +41,7 @@ const Experience = () => {
       scale: 1, 
       opacity: 1,
       transition: shouldReduce 
-        ? { duration: 0.2 } 
+        ? { duration: 0 } 
         : { type: "spring", stiffness: 180, damping: 12 }
     }
   };
@@ -49,7 +49,7 @@ const Experience = () => {
   return (
     <section id="experience" className="py-16 relative overflow-hidden">
       {/* Background Atmosphere Elements */}
-      <div className="absolute inset-0 bg-grid opacity-[0.02] animate-grid-slow pointer-events-none" />
+      <div className={cn("absolute inset-0 bg-grid opacity-[0.02] pointer-events-none", !shouldReduce && "animate-grid-slow")} />
       <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-secondary/5 rounded-full blur-[130px] pointer-events-none" />
       <div className="absolute bottom-1/3 left-1/4 w-[450px] h-[450px] bg-primary/5 rounded-full blur-[130px] pointer-events-none" />
 
@@ -104,16 +104,16 @@ const Experience = () => {
                   className={cn(
                     "flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-black/85 z-20 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-all duration-300",
                     isActive
-                      ? "animate-node-active border-primary/60 text-primary-light shadow-[0_0_22px_rgba(139,92,246,0.8)]"
+                      ? cn("border-primary/60 text-primary-light shadow-[0_0_22px_rgba(139,92,246,0.8)]", !shouldReduce && "animate-node-active")
                       : isPrimary 
-                        ? "animate-node-primary border-primary/20 text-primary-light" 
-                        : "animate-node-secondary border-secondary/20 text-secondary-light"
+                        ? cn("border-primary/20 text-primary-light", !shouldReduce && "animate-node-primary") 
+                        : cn("border-secondary/20 text-secondary-light", !shouldReduce && "animate-node-secondary")
                   )}
                 >
                   <div className={cn(
                     "rounded-full transition-colors shadow-md",
                     isActive 
-                      ? "w-[18px] h-[18px] bg-purple-400 shadow-[0_0_12px_#8b5cf6,0_0_24px_rgba(139,92,246,0.6)] animate-inner-pulse" 
+                      ? cn("w-[18px] h-[18px] bg-purple-400 shadow-[0_0_12px_#8b5cf6,0_0_24px_rgba(139,92,246,0.6)]", !shouldReduce && "animate-inner-pulse")
                       : "w-2.5 h-2.5",
                     !isActive && (isPrimary ? "bg-primary" : "bg-secondary")
                   )} />
@@ -155,7 +155,7 @@ const Experience = () => {
                     <span className={cn(
                       "inline-flex items-center px-2 py-0.5 rounded text-[8px] font-mono font-bold tracking-widest border shadow-sm",
                       item.phase === "AI ENGINEER" 
-                        ? "bg-primary/10 border-primary/35 text-primary-light animate-pulse" 
+                        ? cn("bg-primary/10 border-primary/35 text-primary-light", !shouldReduce && "animate-pulse") 
                         : item.phase === "BUILDER"
                           ? "bg-secondary/10 border-secondary/35 text-secondary-light"
                           : "bg-white/5 border-white/15 text-gray-400"

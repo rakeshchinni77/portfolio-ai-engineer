@@ -41,137 +41,146 @@ const sparkle3Variants = {
 };
 
 // Custom System Diagrams for each project inside the modal
-const AgentDiagram = () => (
-  <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <Cpu className="text-secondary w-6 h-6 mb-2" />
-      <span className="text-white font-bold">User Query</span>
-      <span className="text-gray-400 mt-1 text-center">Natural language intent</span>
-      <span className="text-xs text-secondary-light mt-2 bg-secondary/15 px-2 py-0.5 rounded-full border border-secondary/20">Input</span>
-    </div>
+const AgentDiagram = () => {
+  const shouldReduce = useReducedMotion();
+  return (
+    <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <Cpu className="text-secondary w-6 h-6 mb-2" />
+        <span className="text-white font-bold">User Query</span>
+        <span className="text-gray-400 mt-1 text-center">Natural language intent</span>
+        <span className="text-xs text-secondary-light mt-2 bg-secondary/15 px-2 py-0.5 rounded-full border border-secondary/20">Input</span>
+      </div>
 
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
 
-    <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-primary/10 border border-primary/30 rounded-xl relative group shadow-[0_0_15px_rgba(139,92,246,0.1)]">
-      <div className="absolute -inset-[1px] bg-gradient-to-r from-primary to-secondary rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
-      <Layers className="text-primary w-6 h-6 mb-2 animate-pulse" />
-      <span className="text-white font-bold">Agent Core (ReAct)</span>
-      <span className="text-gray-300 mt-1 text-center font-semibold">FastAPI Orchestration</span>
-      
-      <div className="mt-3 flex gap-2 w-full">
-        <div className="flex-1 bg-black/40 p-1.5 rounded border border-white/5 text-center">
-          <span className="text-gray-400 block text-[9px]">Memory</span>
-          <span className="text-secondary-light font-bold text-[10px]">Redis Cache</span>
+      <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-primary/10 border border-primary/30 rounded-xl relative group shadow-[0_0_15px_rgba(139,92,246,0.1)]">
+        <div className="absolute -inset-[1px] bg-gradient-to-r from-primary to-secondary rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
+        <Layers className="text-primary w-6 h-6 mb-2 animate-pulse" />
+        <span className="text-white font-bold">Agent Core (ReAct)</span>
+        <span className="text-gray-300 mt-1 text-center font-semibold">FastAPI Orchestration</span>
+        
+        <div className="mt-3 flex gap-2 w-full">
+          <div className="flex-1 bg-black/40 p-1.5 rounded border border-white/5 text-center">
+            <span className="text-gray-400 block text-[9px]">Memory</span>
+            <span className="text-secondary-light font-bold text-[10px]">Redis Cache</span>
+          </div>
+          <div className="flex-1 bg-black/40 p-1.5 rounded border border-white/5 text-center">
+            <span className="text-gray-400 block text-[9px]">Tools</span>
+            <span className="text-primary-light font-bold text-[10px]">Registry</span>
+          </div>
         </div>
-        <div className="flex-1 bg-black/40 p-1.5 rounded border border-white/5 text-center">
-          <span className="text-gray-400 block text-[9px]">Tools</span>
-          <span className="text-primary-light font-bold text-[10px]">Registry</span>
+      </div>
+
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <Database className="text-purple-400 w-6 h-6 mb-2" />
+        <span className="text-white font-bold">Tool Sandbox</span>
+        <span className="text-gray-400 mt-1 text-center">Dockerized environments</span>
+        <div className="flex flex-wrap gap-1 mt-2 justify-center">
+          <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">Search</span>
+          <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">SQL</span>
+          <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">Python</span>
         </div>
       </div>
     </div>
+  );
+};
 
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
+const SearchDiagram = () => {
+  const shouldReduce = useReducedMotion();
+  return (
+    <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <Cpu className="text-cyan-400 w-6 h-6 mb-2" />
+        <span className="text-white font-bold">Search Query</span>
+        <span className="text-gray-400 mt-1 text-center">Unstructured search text</span>
+        <span className="text-xs text-cyan-400 mt-2 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">Query</span>
+      </div>
 
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <Database className="text-purple-400 w-6 h-6 mb-2" />
-      <span className="text-white font-bold">Tool Sandbox</span>
-      <span className="text-gray-400 mt-1 text-center">Dockerized environments</span>
-      <div className="flex flex-wrap gap-1 mt-2 justify-center">
-        <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">Search</span>
-        <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">SQL</span>
-        <span className="bg-white/5 px-1.5 py-0.5 rounded text-[9px] text-gray-400 border border-white/5">Python</span>
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <Settings className="text-purple-400 w-6 h-6 mb-2 animate-spin" style={{ animationDuration: '10s' }} />
+        <span className="text-white font-bold">Transformer Model</span>
+        <span className="text-gray-400 mt-1 text-center">all-mpnet-base-v2</span>
+        <span className="text-[10px] text-purple-300 mt-1 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">768-Dim Dense Vector</span>
+      </div>
+
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
+
+      <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl relative group shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+        <div className="absolute -inset-[1px] bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
+        <Database className="text-cyan-400 w-6 h-6 mb-2" />
+        <span className="text-white font-bold">FAISS Index</span>
+        <span className="text-gray-300 mt-1 text-center font-semibold">IVF-PQ Quantized DB</span>
+        <span className="text-cyan-300 mt-1 text-[10px] bg-cyan-950/60 border border-cyan-500/20 px-2 py-0.5 rounded">Retrieval: &lt;20ms</span>
+        <span className="text-gray-400 mt-2 text-[9px] text-center leading-normal">Cos-Sim Top-K Matching</span>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
-const SearchDiagram = () => (
-  <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <Cpu className="text-cyan-400 w-6 h-6 mb-2" />
-      <span className="text-white font-bold">Search Query</span>
-      <span className="text-gray-400 mt-1 text-center">Unstructured search text</span>
-      <span className="text-xs text-cyan-400 mt-2 bg-cyan-500/10 px-2 py-0.5 rounded-full border border-cyan-500/20">Query</span>
-    </div>
+const EvalDiagram = () => {
+  const shouldReduce = useReducedMotion();
+  return (
+    <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <Database className="text-secondary w-6 h-6 mb-2" />
+        <span className="text-white font-bold">RAG Data Logs</span>
+        <span className="text-gray-400 mt-1 text-center">Contexts + answers</span>
+        <span className="text-xs text-secondary-light mt-2 bg-secondary/15 px-2 py-0.5 rounded-full border border-secondary/20">Input</span>
+      </div>
 
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
 
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <Settings className="text-purple-400 w-6 h-6 mb-2 animate-spin" style={{ animationDuration: '10s' }} />
-      <span className="text-white font-bold">Transformer Model</span>
-      <span className="text-gray-400 mt-1 text-center">all-mpnet-base-v2</span>
-      <span className="text-[10px] text-purple-300 mt-1 bg-purple-500/10 px-1.5 py-0.5 rounded border border-purple-500/20">768-Dim Dense Vector</span>
-    </div>
-
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
-
-    <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-cyan-500/10 border border-cyan-500/30 rounded-xl relative group shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-      <div className="absolute -inset-[1px] bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
-      <Database className="text-cyan-400 w-6 h-6 mb-2" />
-      <span className="text-white font-bold">FAISS Index</span>
-      <span className="text-gray-300 mt-1 text-center font-semibold">IVF-PQ Quantized DB</span>
-      <span className="text-cyan-300 mt-1 text-[10px] bg-cyan-950/60 border border-cyan-500/20 px-2 py-0.5 rounded">Retrieval: &lt;20ms</span>
-      <span className="text-gray-400 mt-2 text-[9px] text-center leading-normal">Cos-Sim Top-K Matching</span>
-    </div>
-  </div>
-);
-
-const EvalDiagram = () => (
-  <div className="flex flex-col md:flex-row items-stretch justify-between gap-6 py-6 font-mono text-[11px]">
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <Database className="text-secondary w-6 h-6 mb-2" />
-      <span className="text-white font-bold">RAG Data Logs</span>
-      <span className="text-gray-400 mt-1 text-center">Contexts + answers</span>
-      <span className="text-xs text-secondary-light mt-2 bg-secondary/15 px-2 py-0.5 rounded-full border border-secondary/20">Input</span>
-    </div>
-
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
-
-    <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-primary/10 border border-primary/30 rounded-xl relative group shadow-[0_0_15px_rgba(139,92,246,0.1)]">
-      <div className="absolute -inset-[1px] bg-gradient-to-r from-primary to-secondary rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
-      <Cpu className="text-primary w-6 h-6 mb-2 animate-pulse" />
-      <span className="text-white font-bold">Metric Runner</span>
-      <span className="text-gray-300 mt-1 text-center font-semibold">Plugin Orchestrator</span>
-      <div className="mt-3 flex flex-col gap-1 w-full text-[10px] text-gray-300">
-        <div className="flex justify-between bg-black/40 px-2 py-1 rounded">
-          <span>Faithfulness:</span>
-          <span className="text-emerald-400 font-bold">NLI</span>
-        </div>
-        <div className="flex justify-between bg-black/40 px-2 py-1 rounded">
-          <span>Relevancy:</span>
-          <span className="text-emerald-400 font-bold">LLM-Judge</span>
+      <div className="flex-1.2 flex flex-col justify-center items-center p-4 bg-primary/10 border border-primary/30 rounded-xl relative group shadow-[0_0_15px_rgba(139,92,246,0.1)]">
+        <div className="absolute -inset-[1px] bg-gradient-to-r from-primary to-secondary rounded-xl opacity-20 group-hover:opacity-50 blur-sm transition-opacity" />
+        <Cpu className="text-primary w-6 h-6 mb-2 animate-pulse" />
+        <span className="text-white font-bold">Metric Runner</span>
+        <span className="text-gray-300 mt-1 text-center font-semibold">Plugin Orchestrator</span>
+        <div className="mt-3 flex flex-col gap-1 w-full text-[10px] text-gray-300">
+          <div className="flex justify-between bg-black/40 px-2 py-1 rounded">
+            <span>Faithfulness:</span>
+            <span className="text-emerald-400 font-bold">NLI</span>
+          </div>
+          <div className="flex justify-between bg-black/40 px-2 py-1 rounded">
+            <span>Relevancy:</span>
+            <span className="text-emerald-400 font-bold">LLM-Judge</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
-      <motion.span animate={{ x: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
-      <motion.span animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
-    </div>
+      <div className="flex items-center justify-center text-gray-500 font-bold md:rotate-0 rotate-90 self-center">
+        <motion.span animate={shouldReduce ? {} : { x: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="hidden md:block">➔</motion.span>
+        <motion.span animate={shouldReduce ? {} : { y: [0, 8, 0] }} transition={shouldReduce ? {} : { repeat: Infinity, duration: 1.5, delay: 0.5 }} className="md:hidden block">⬇</motion.span>
+      </div>
 
-    <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
-      <CheckCircle className="text-emerald-400 w-6 h-6 mb-2" />
-      <span className="text-white font-bold">CI/CD Gate</span>
-      <span className="text-gray-400 mt-1 text-center">GitHub Actions / Docker</span>
-      <span className="text-[10px] text-emerald-400 mt-2 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">Verify & Deploy</span>
+      <div className="flex-1 flex flex-col justify-center items-center p-4 bg-white/5 border border-white/10 rounded-xl relative group">
+        <CheckCircle className="text-emerald-400 w-6 h-6 mb-2" />
+        <span className="text-white font-bold">CI/CD Gate</span>
+        <span className="text-gray-400 mt-1 text-center">GitHub Actions / Docker</span>
+        <span className="text-[10px] text-emerald-400 mt-2 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 font-bold">Verify & Deploy</span>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const specSheets = {
   "Autonomous Research Agent": `
@@ -355,7 +364,7 @@ const Projects = () => {
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 0.7, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -476,9 +485,13 @@ const Projects = () => {
                       <FaGithub size={14} className="group-hover/btn:scale-110 transition-transform" />
                       <span>Code</span>
                       {/* Floating Micro-stars */}
-                      <motion.span className="absolute -top-1 right-2 text-cyan-400 pointer-events-none opacity-0 select-none text-[8px]" variants={sparkle1Variants}>✦</motion.span>
-                      <motion.span className="absolute -top-2 left-3 text-cyan-400 pointer-events-none opacity-0 select-none text-[6px]" variants={sparkle2Variants}>✦</motion.span>
-                      <motion.span className="absolute -top-1.5 left-1/2 text-cyan-300 pointer-events-none opacity-0 select-none text-[7px]" variants={sparkle3Variants}>✦</motion.span>
+                      {!shouldReduce && (
+                        <>
+                          <motion.span className="absolute -top-1 right-2 text-cyan-400 pointer-events-none opacity-0 select-none text-[8px]" variants={sparkle1Variants}>✦</motion.span>
+                          <motion.span className="absolute -top-2 left-3 text-cyan-400 pointer-events-none opacity-0 select-none text-[6px]" variants={sparkle2Variants}>✦</motion.span>
+                          <motion.span className="absolute -top-1.5 left-1/2 text-cyan-300 pointer-events-none opacity-0 select-none text-[7px]" variants={sparkle3Variants}>✦</motion.span>
+                        </>
+                      )}
                     </motion.a>
 
 
@@ -519,10 +532,10 @@ const Projects = () => {
 
             {/* Modal Box */}
             <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: shouldReduce ? 1 : 0.95, y: shouldReduce ? 0 : 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              exit={{ opacity: 0, scale: shouldReduce ? 1 : 0.95, y: shouldReduce ? 0 : 15 }}
+              transition={{ duration: shouldReduce ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="bg-[#0b081e] border border-white/10 rounded-2xl w-full max-w-4xl max-h-[85vh] overflow-hidden flex flex-col shadow-2xl relative z-10"
             >
               {/* Top Window Chrome (Mac Terminal Style) */}

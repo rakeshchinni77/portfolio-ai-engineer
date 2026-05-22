@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const SlideLeft = ({ children, delay = 0, duration = 0.6, xOffset = -30, className = "", isChild = false }) => {

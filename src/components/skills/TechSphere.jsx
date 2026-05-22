@@ -39,24 +39,22 @@ const TechSphere = () => {
 
   // Animation Loop (Orbit + Mouse Easing)
   useEffect(() => {
+    if (shouldReduce) return;
+
     let animFrame;
     
     const update = () => {
       // Ease mouse position for organic delay feel
-      if (!shouldReduce) {
-        setMousePos(prev => ({
-          x: prev.x + (targetMousePos.x - prev.x) * 0.08,
-          y: prev.y + (targetMousePos.y - prev.y) * 0.08
-        }));
-      }
+      setMousePos(prev => ({
+        x: prev.x + (targetMousePos.x - prev.x) * 0.08,
+        y: prev.y + (targetMousePos.y - prev.y) * 0.08
+      }));
 
       // Increment angles
       setAngles(prev => 
         prev.map((angle, idx) => {
           const item = techItems[idx];
-          // If reduced motion is active, don't increment
-          const speed = shouldReduce ? 0 : item.speed;
-          return angle + speed;
+          return angle + item.speed;
         })
       );
 

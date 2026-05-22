@@ -86,8 +86,8 @@ const Contact = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
+        staggerChildren: shouldReduce ? 0 : 0.1,
+        delayChildren: shouldReduce ? 0 : 0.1
       }
     }
   };
@@ -97,7 +97,7 @@ const Contact = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : 0.5, ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -135,7 +135,9 @@ const Contact = () => {
                   </span>
                   <div className="flex items-center gap-2 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
                     <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      {!shouldReduce && (
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      )}
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
                     <span className="text-[10px] font-mono text-emerald-400 font-bold tracking-wide">
@@ -223,9 +225,9 @@ const Contact = () => {
             <div className="glass p-8 flex flex-col h-full min-h-[440px] hover:border-white/10 hover:shadow-glow-primary transition-all duration-500 justify-center">
               {status === 'success' ? (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: shouldReduce ? 1 : 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4 }}
+                  transition={{ duration: shouldReduce ? 0 : 0.4 }}
                   className="flex flex-col items-center justify-center text-center space-y-4 py-8"
                 >
                   <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
