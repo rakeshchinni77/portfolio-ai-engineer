@@ -2,10 +2,32 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BrainCircuit, Code2, Database } from 'lucide-react';
 
+import { aboutData } from '@/constants/aboutData';
 import SlideUp from '@/components/animations/SlideUp';
 import StaggerContainer from '@/components/animations/StaggerContainer';
 import SectionHeader from '@/components/common/SectionHeader';
 import GlassCard from '@/components/ui/GlassCard';
+
+const iconMap = {
+  BrainCircuit,
+  Code2,
+  Database
+};
+
+const themeMaps = {
+  primary: {
+    bg: "bg-primary/20",
+    text: "text-primary"
+  },
+  secondary: {
+    bg: "bg-secondary/20",
+    text: "text-secondary"
+  },
+  blue: {
+    bg: "bg-blue-500/20",
+    text: "text-blue-400"
+  }
+};
 
 const About = () => {
   const shouldReduce = useReducedMotion();
@@ -23,7 +45,7 @@ const About = () => {
     <section id="about" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
-        <SectionHeader number="01." title="About Me" />
+        <SectionHeader number={aboutData.number} title={aboutData.title} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
@@ -31,56 +53,48 @@ const About = () => {
             <div className="space-y-6 text-gray-300 text-lg leading-relaxed">
               <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-start mb-6">
                 <div className="w-40 h-40 shrink-0 rounded-2xl overflow-hidden border border-primary/50 shadow-glow-primary">
-                  {/* Fallback to placeholder if image not found */}
                   <img 
-                    src="/images/profile.png" 
-                    alt="Chinni Rakesh" 
+                    src={aboutData.profileImage} 
+                    alt={aboutData.title} 
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
-                    onError={(e) => { e.target.src = 'https://via.placeholder.com/150/030014/8b5cf6?text=Profile' }} 
+                    onError={(e) => { e.target.src = aboutData.fallbackImage }} 
                   />
                 </div>
-                <p className="mt-4 sm:mt-0">
-                  I am an AI/ML student with a strong foundation in building scalable, intelligent applications. 
-                  My passion lies in merging cutting-edge machine learning models with modern, interactive web interfaces.
-                </p>
+                {aboutData.description.length > 0 && (
+                  <p className="mt-4 sm:mt-0">
+                    {aboutData.description[0]}
+                  </p>
+                )}
               </div>
-              <p>
-                Currently, I am exploring the intersection of Generative AI and full-stack development, 
-                focusing on creating tools that empower users through intelligent automation and insightful data analysis.
-              </p>
-              <p>
-                Whether it's fine-tuning language models or designing a pixel-perfect React component, 
-                I bring a unique combination of analytical thinking and creative problem-solving to every project.
-              </p>
+              {aboutData.description.slice(1).map((paragraph, idx) => (
+                <p key={idx}>{paragraph}</p>
+              ))}
             </div>
           </SlideUp>
 
           {/* Cards (Staggered Entrance) */}
           <StaggerContainer delayChildren={0.2} staggerChildren={0.15}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-                  <BrainCircuit size={24} />
-                </div>
-                <h3 className="text-xl font-semibold text-white">AI / ML</h3>
-                <p className="text-sm text-gray-400">Deep Learning, NLP, Predictive Modeling, Data Pipelines.</p>
-              </GlassCard>
-              
-              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4 mt-0 sm:mt-8">
-                <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
-                  <Code2 size={24} />
-                </div>
-                <h3 className="text-xl font-semibold text-white">Frontend</h3>
-                <p className="text-sm text-gray-400">React, Next.js, Tailwind CSS, Framer Motion.</p>
-              </GlassCard>
-              
-              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4 sm:col-span-2">
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
-                  <Database size={24} />
-                </div>
-                <h3 className="text-xl font-semibold text-white">Backend & Ops</h3>
-                <p className="text-sm text-gray-400">Python, Node.js, REST APIs, Vector Databases, Deployment.</p>
-              </GlassCard>
+              {aboutData.highlights.map((card, idx) => {
+                const IconComponent = iconMap[card.icon] || Code2;
+                const activeTheme = themeMaps[card.theme] || themeMaps.primary;
+                const isThird = idx === 2;
+
+                return (
+                  <GlassCard 
+                    key={idx} 
+                    as={motion.div} 
+                    variants={cardVariants} 
+                    className={`p-6 flex flex-col gap-4 ${isThird ? 'sm:col-span-2' : idx === 1 ? 'mt-0 sm:mt-8' : ''}`}
+                  >
+                    <div className={`w-12 h-12 rounded-full ${activeTheme.bg} flex items-center justify-center ${activeTheme.text}`}>
+                      <IconComponent size={24} />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white">{card.title}</h3>
+                    <p className="text-sm text-gray-400">{card.description}</p>
+                  </GlassCard>
+                );
+              })}
             </div>
           </StaggerContainer>
         </div>

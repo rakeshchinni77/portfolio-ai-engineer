@@ -4,7 +4,7 @@ import { ArrowRight, Terminal } from 'lucide-react';
 import { FaPython, FaReact, FaDocker } from 'react-icons/fa';
 import { SiTensorflow, SiPytorch, SiFastapi } from 'react-icons/si';
 
-import { keywords } from '@/constants/portfolio';
+import { heroData } from '@/constants/heroData';
 import FloatingElement from '@/components/animations/FloatingElement';
 import Button from '@/components/ui/Button';
 
@@ -20,7 +20,7 @@ const Hero = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setKeywordIndex((prev) => (prev + 1) % keywords.length);
+      setKeywordIndex((prev) => (prev + 1) % heroData.rotatingKeywords.length);
     }, 3000);
     return () => clearInterval(interval);
   }, []);
@@ -92,7 +92,7 @@ const Hero = () => {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
             <span className="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
           </span>
-          <span className="text-sm font-mono text-gray-300">Available for Opportunities</span>
+          <span className="text-sm font-mono text-gray-300">{heroData.badge}</span>
         </motion.div>
 
         {/* Main Heading */}
@@ -100,8 +100,8 @@ const Hero = () => {
           variants={itemVariants}
           className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-4 md:mb-6"
         >
-          <span className="block text-white">Chinni Rakesh</span>
-          <span className="block text-gradient mt-2">AI Engineer</span>
+          <span className="block text-white">{heroData.name}</span>
+          <span className="block text-gradient mt-2">{heroData.title}</span>
         </motion.h1>
 
         {/* Subtitle & Rotating Keywords */}
@@ -110,9 +110,14 @@ const Hero = () => {
           className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light h-auto"
         >
           <p className="mb-4 md:mb-2">
-            I build intelligent systems and modern interfaces. Bridging the gap between 
-            <span className="text-white font-medium"> machine learning models</span> and 
-            <span className="text-white font-medium"> human-centric web experiences</span>.
+            {heroData.descriptionSegments.map((segment, idx) => (
+              <span 
+                key={idx} 
+                className={segment.highlight ? "text-white font-medium" : undefined}
+              >
+                {segment.text}
+              </span>
+            ))}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 font-mono text-sm text-secondary">
             <span>Specializing in:</span>
@@ -126,7 +131,7 @@ const Hero = () => {
                   transition={{ duration: 0.5, ease: "easeInOut" }}
                   className="inline-block text-primary font-bold text-glow"
                 >
-                  {keywords[keywordIndex]}
+                  {heroData.rotatingKeywords[keywordIndex]}
                 </motion.span>
               </AnimatePresence>
             </span>
@@ -135,14 +140,27 @@ const Hero = () => {
 
         {/* CTA Buttons */}
         <motion.div variants={itemVariants} className="mt-8 md:mt-12 flex flex-col sm:flex-row gap-4 justify-center w-full max-w-xs sm:max-w-none mx-auto">
-          <Button as="a" href="#projects" variant="primary" size="lg" className="group overflow-hidden">
+          <Button 
+            as="a" 
+            href={heroData.ctas.primary.href} 
+            variant="primary" 
+            size="lg" 
+            className="group overflow-hidden"
+          >
             <span className="relative z-10 flex items-center gap-2">
-              View Projects <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              {heroData.ctas.primary.label} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </span>
           </Button>
-          <Button as="a" href="/resume.pdf" target="_blank" variant="glass" size="lg" className="flex items-center gap-2 justify-center">
+          <Button 
+            as="a" 
+            href={heroData.ctas.secondary.href} 
+            target={heroData.ctas.secondary.target} 
+            variant="glass" 
+            size="lg" 
+            className="flex items-center gap-2 justify-center"
+          >
             <Terminal size={18} className="text-secondary" />
-            Download Resume
+            {heroData.ctas.secondary.label}
           </Button>
         </motion.div>
       </motion.div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-import { navLinks } from '@/constants/portfolio';
+import { navLinks } from '@/constants/navLinks';
 import Button from '@/components/ui/Button';
 
 const Navbar = () => {

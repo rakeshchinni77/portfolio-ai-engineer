@@ -1,10 +1,23 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-import { experienceData } from '@/constants/portfolio';
+import { experienceData } from '@/constants/experienceData';
 import SlideUp from '@/components/animations/SlideUp';
 import SectionHeader from '@/components/common/SectionHeader';
 import GlassCard from '@/components/ui/GlassCard';
+
+const themeMaps = {
+  primary: {
+    text: "text-primary",
+    dotBg: "bg-primary",
+    glow: "shadow-glow-primary"
+  },
+  secondary: {
+    text: "text-secondary",
+    dotBg: "bg-secondary",
+    glow: "shadow-glow-secondary"
+  }
+};
 
 const Experience = () => {
   const shouldReduce = useReducedMotion();
@@ -36,6 +49,8 @@ const Experience = () => {
         <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-secondary before:to-transparent">
           {experienceData.map((item, idx) => {
             const isEven = idx % 2 === 0;
+            const activeTheme = themeMaps[item.theme] || themeMaps.primary;
+
             return (
               <div key={idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 
@@ -45,9 +60,9 @@ const Experience = () => {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true, margin: "-100px" }}
                   transition={{ delay: 0.2, duration: 0.4 }}
-                  className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-surfaceBorder shadow-glow-primary text-primary shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative"
+                  className={`flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-surfaceBorder ${activeTheme.glow} ${activeTheme.text} shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative`}
                 >
-                  <div className="w-3 h-3 bg-primary rounded-full group-hover:bg-secondary transition-colors"></div>
+                  <div className={`w-3 h-3 ${activeTheme.dotBg} rounded-full transition-colors`}></div>
                 </motion.div>
                 
                 {/* Content Card */}
@@ -61,9 +76,9 @@ const Experience = () => {
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
                     <h3 className="font-bold text-white text-xl">{item.role}</h3>
-                    <time className="font-mono text-sm text-secondary">{item.date}</time>
+                    <time className="font-mono text-sm text-secondary">{item.year}</time>
                   </div>
-                  <div className="text-primary font-medium mb-4">{item.company}</div>
+                  <div className={`font-medium mb-4 ${activeTheme.text}`}>{item.organization}</div>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
                 </GlassCard>
                 

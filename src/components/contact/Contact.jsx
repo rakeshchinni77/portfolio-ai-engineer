@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Send, Mail, MapPin } from 'lucide-react';
-
+import { Mail, MapPin, Send } from 'lucide-react';
+import { socials } from '@/constants/socials';
 import SlideUp from '@/components/animations/SlideUp';
 import StaggerContainer from '@/components/animations/StaggerContainer';
 import SectionHeader from '@/components/common/SectionHeader';
@@ -9,6 +9,19 @@ import GlassCard from '@/components/ui/GlassCard';
 import Input from '@/components/ui/Input';
 import TextArea from '@/components/ui/TextArea';
 import Button from '@/components/ui/Button';
+
+const themeMaps = {
+  primary: {
+    bg: "bg-primary/20",
+    text: "text-primary",
+    linkHover: "hover:text-primary"
+  },
+  secondary: {
+    bg: "bg-secondary/20",
+    text: "text-secondary",
+    linkHover: "hover:text-secondary"
+  }
+};
 
 const Contact = () => {
   const shouldReduce = useReducedMotion();
@@ -21,6 +34,22 @@ const Contact = () => {
       transition: { duration: 0.5, ease: "easeOut" }
     }
   };
+
+  const contactDetails = [
+    {
+      title: "Email",
+      value: socials.email,
+      href: `mailto:${socials.email}`,
+      icon: Mail,
+      theme: "primary"
+    },
+    {
+      title: "Location",
+      value: socials.location,
+      icon: MapPin,
+      theme: "secondary"
+    }
+  ];
 
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
@@ -40,29 +69,30 @@ const Contact = () => {
           
           {/* Contact Info */}
           <StaggerContainer className="lg:col-span-2 space-y-8" staggerChildren={0.15}>
-            <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0">
-                <Mail size={24} />
-              </div>
-              <div>
-                <h3 className="text-white font-semibold mb-1">Email</h3>
-                <a href="mailto:contact@example.com" className="text-gray-400 hover:text-primary transition-colors text-sm">
-                  contact@example.com
-                </a>
-              </div>
-            </GlassCard>
-            
-            <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex items-start gap-4">
-              <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary shrink-0">
-                <MapPin size={24} />
-              </div>
-              <div>
-                <h3 className="text-white font-semibold mb-1">Location</h3>
-                <p className="text-gray-400 text-sm">
-                  Available for Remote Work
-                </p>
-              </div>
-            </GlassCard>
+            {contactDetails.map((detail, idx) => {
+              const IconComponent = detail.icon;
+              const activeTheme = themeMaps[detail.theme] || themeMaps.primary;
+
+              return (
+                <GlassCard key={idx} as={motion.div} variants={cardVariants} className="p-6 flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-full ${activeTheme.bg} flex items-center justify-center ${activeTheme.text} shrink-0`}>
+                    <IconComponent size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-semibold mb-1">{detail.title}</h3>
+                    {detail.href ? (
+                      <a href={detail.href} className={`text-gray-400 ${activeTheme.linkHover} transition-colors text-sm`}>
+                        {detail.value}
+                      </a>
+                    ) : (
+                      <p className="text-gray-400 text-sm">
+                        {detail.value}
+                      </p>
+                    )}
+                  </div>
+                </GlassCard>
+              );
+            })}
           </StaggerContainer>
           
           {/* Contact Form */}
