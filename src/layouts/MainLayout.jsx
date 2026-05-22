@@ -1,0 +1,27 @@
+import React from 'react';
+import Navbar from '../components/layout/Navbar';
+import Footer from '../components/layout/Footer';
+
+const MainLayout = ({ children }) => {
+  return (
+    <div className="relative min-h-screen bg-background text-white selection:bg-primary/30 selection:text-white">
+      {/* Global Background Grid & Gradients */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-grid opacity-[0.2]"></div>
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/20 blur-[120px]"></div>
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-secondary/20 blur-[120px]"></div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow pt-24">
+          {children}
+        </main>
+        <Footer />
+      </div>
+    </div>
+  );
+};
+
+export default MainLayout;
