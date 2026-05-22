@@ -1,22 +1,10 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import SlideUp from '../animations/SlideUp';
-import StaggerContainer from '../animations/StaggerContainer';
 
-const experienceData = [
-  {
-    role: "AI/ML Student",
-    company: "University / Self-Taught",
-    date: "2023 - Present",
-    description: "Specializing in machine learning models, natural language processing, and bridging AI with full-stack web applications."
-  },
-  {
-    role: "Full Stack Developer (Learning)",
-    company: "Personal Projects",
-    date: "2022 - 2023",
-    description: "Built scalable web applications using React, Node.js, and modern CSS frameworks. Focused on component-driven architecture."
-  }
-];
+import { experienceData } from '@/constants/portfolio';
+import SlideUp from '@/components/animations/SlideUp';
+import SectionHeader from '@/components/common/SectionHeader';
+import GlassCard from '@/components/ui/GlassCard';
 
 const Experience = () => {
   const shouldReduce = useReducedMotion();
@@ -43,14 +31,7 @@ const Experience = () => {
     <section id="experience" className="py-24 relative">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         
-        <SlideUp>
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-center">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">04.</span> Journey
-            </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-transparent rounded-full mx-auto"></div>
-          </div>
-        </SlideUp>
+        <SectionHeader number="04." title="Journey" align="center" />
 
         <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-secondary before:to-transparent">
           {experienceData.map((item, idx) => {
@@ -70,12 +51,13 @@ const Experience = () => {
                 </motion.div>
                 
                 {/* Content Card */}
-                <motion.div 
+                <GlassCard 
+                  as={motion.div}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, margin: "-150px" }}
                   variants={isEven ? itemVariants : itemVariantsLeft}
-                  className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-6 rounded-2xl"
+                  className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-6 rounded-2xl"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2">
                     <h3 className="font-bold text-white text-xl">{item.role}</h3>
@@ -83,7 +65,7 @@ const Experience = () => {
                   </div>
                   <div className="text-primary font-medium mb-4">{item.company}</div>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
-                </motion.div>
+                </GlassCard>
                 
               </div>
             );

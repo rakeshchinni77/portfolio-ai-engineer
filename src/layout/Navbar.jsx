@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
-
-const navLinks = [
-  { name: 'Home', href: '#home' },
-  { name: 'About', href: '#about' },
-  { name: 'Skills', href: '#skills' },
-  { name: 'Projects', href: '#projects' },
-  { name: 'Experience', href: '#experience' },
-  { name: 'Contact', href: '#contact' },
-];
+import { navLinks } from '@/constants/portfolio';
+import Button from '@/components/ui/Button';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -42,9 +35,9 @@ const Navbar = () => {
               {link.name}
             </a>
           ))}
-          <a href="#projects" className="px-5 py-2 rounded-full bg-primary/20 text-primary border border-primary/50 hover:bg-primary/30 hover:shadow-glow-primary transition-all font-medium text-sm">
+          <Button as="a" href="#projects" variant="navGlow" size="md">
             View Work
-          </a>
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}

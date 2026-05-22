@@ -2,35 +2,13 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ExternalLink } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
-import SlideUp from '../animations/SlideUp';
-import StaggerContainer from '../animations/StaggerContainer';
 
-const portfolioProjects = [
-  {
-    title: "Autonomous Research Agent",
-    subtitle: "(LangChain + FastAPI) | Jan 2026 – Feb 2026",
-    description: "Architected a containerized AI research agent implementing the ReAct reasoning framework. Enables multistep problem solving through dynamic tool invocation across calculator, web search, SQL queries, and Python execution. Features a session-aware conversational memory system using Redis.",
-    tech: ["Python", "FastAPI", "LangChain", "OpenAI API", "Redis", "Docker", "Pytest"],
-    github: "#",
-    live: "#",
-  },
-  {
-    title: "Scalable Semantic Search API",
-    subtitle: "(FAISS + FastAPI) | May 2025 - June 2025",
-    description: "Engineered a containerized semantic search API with FAISS vector indexing, delivering top-K results in <200 ms across 1K+ documents. Reduced manual keyword search effort by ≥80% using transformer-based embeddings for context-aware retrieval.",
-    tech: ["Python", "FastAPI", "FAISS", "SentenceTransformers", "Docker Compose", "Pytest"],
-    github: "#",
-    live: "#",
-  },
-  {
-    title: "Production-Grade LLM Eval Framework",
-    subtitle: "Individual Project | Dec 2025 - Jan 2026",
-    description: "Architected a modular LLM evaluation CLI with plugin-based metrics for RAG-based systems. Assesses faithfulness, context relevancy, and answer correctness using LLM-as-a-Judge. Automated end-to-end evaluation workflows using Docker Compose and GitHub Actions CI.",
-    tech: ["Python", "Poetry", "PyTorch", "Transformers", "GitHub Actions", "Docker"],
-    github: "#",
-    live: "#",
-  }
-];
+import { portfolioProjects } from '@/constants/portfolio';
+import SlideUp from '@/components/animations/SlideUp';
+import StaggerContainer from '@/components/animations/StaggerContainer';
+import SectionHeader from '@/components/common/SectionHeader';
+import GlassCard from '@/components/ui/GlassCard';
+import Badge from '@/components/ui/Badge';
 
 const Projects = () => {
   const shouldReduce = useReducedMotion();
@@ -48,23 +26,21 @@ const Projects = () => {
     <section id="projects" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
-        <SlideUp>
-          <div className="mb-16 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">03.</span> Projects Showcase
-            </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-transparent rounded-full mx-auto"></div>
-            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">Selected works bridging AI architecture with backend perfection.</p>
-          </div>
-        </SlideUp>
+        <SectionHeader 
+          number="03." 
+          title="Projects Showcase" 
+          subtitle="Selected works bridging AI architecture with backend perfection." 
+          align="center" 
+        />
 
         <StaggerContainer staggerChildren={0.2}>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {portfolioProjects.map((project, idx) => (
-              <motion.div 
+              <GlassCard 
                 key={idx} 
+                as={motion.div}
                 variants={cardVariants}
-                className="glass-card flex flex-col h-full rounded-2xl overflow-hidden group"
+                className="flex flex-col h-full rounded-2xl overflow-hidden group"
               >
                 {/* Abstract Visual Placeholder instead of plain image */}
                 <div className="h-48 bg-surfaceBorder/30 relative overflow-hidden flex items-center justify-center p-6 text-center">
@@ -82,9 +58,9 @@ const Projects = () => {
                   
                   <div className="flex flex-wrap gap-2 mb-6">
                     {project.tech.map((t, tIdx) => (
-                      <span key={tIdx} className="text-xs font-mono text-gray-300 bg-surface px-2 py-1 rounded">
+                      <Badge key={tIdx} variant="tech">
                         {t}
-                      </span>
+                      </Badge>
                     ))}
                   </div>
                   
@@ -99,7 +75,7 @@ const Projects = () => {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </GlassCard>
             ))}
           </div>
         </StaggerContainer>

@@ -1,6 +1,6 @@
 import React from 'react';
-import MainLayout from './layouts/MainLayout';
-import Home from './pages/Home';
+import MainLayout from '@/layout/MainLayout';
+import Home from '@/pages/Home';
 
 function App() {
   return (

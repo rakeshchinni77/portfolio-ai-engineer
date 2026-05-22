@@ -1,10 +1,10 @@
 import React from 'react';
-import Navbar from '../components/layout/Navbar';
-import Footer from '../components/layout/Footer';
+import Navbar from '@/layout/Navbar';
+import Footer from '@/layout/Footer';
 
 const MainLayout = ({ children }) => {
   return (
-    <div className="relative min-h-screen bg-background text-white selection:bg-primary/30 selection:text-white">
+    <div className="relative min-h-[100svh] bg-background text-white selection:bg-primary/30 selection:text-white">
       {/* Global Background Grid & Gradients */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-grid opacity-[0.2]"></div>
@@ -13,7 +13,7 @@ const MainLayout = ({ children }) => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
+      <div className="relative z-10 flex flex-col min-h-[100svh]">
         <Navbar />
         <main className="flex-grow pt-24">
           {children}

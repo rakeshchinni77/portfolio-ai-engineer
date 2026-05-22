@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const SlideUp = ({ children, delay = 0, duration = 0.6, yOffset = 40, className = "" }) => {
+const SlideUp = ({ children, delay = 0, duration = 0.6, yOffset = 40, className = "", isChild = false }) => {
   const shouldReduce = useReducedMotion();
 
   const variants = {
@@ -19,9 +19,9 @@ const SlideUp = ({ children, delay = 0, duration = 0.6, yOffset = 40, className 
 
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
+      initial={isChild ? undefined : "hidden"}
+      whileInView={isChild ? undefined : "visible"}
+      viewport={isChild ? undefined : { once: true, margin: "-100px" }}
       variants={variants}
       className={className}
     >

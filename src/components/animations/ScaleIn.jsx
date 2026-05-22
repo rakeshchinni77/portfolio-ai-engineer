@@ -1,13 +1,21 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-const FadeIn = ({ children, delay = 0, duration = 0.5, className = "", isChild = false }) => {
+const ScaleIn = ({ 
+  children, 
+  delay = 0, 
+  duration = 0.3, 
+  scaleOffset = 0.8, 
+  className = "", 
+  isChild = true 
+}) => {
   const shouldReduce = useReducedMotion();
 
   const variants = {
-    hidden: { opacity: 0 },
+    hidden: { opacity: 0, scale: shouldReduce ? 1 : scaleOffset },
     visible: { 
-      opacity: 1,
+      opacity: 1, 
+      scale: 1,
       transition: {
         duration: shouldReduce ? 0 : duration,
         delay: shouldReduce ? 0 : delay,
@@ -29,4 +37,4 @@ const FadeIn = ({ children, delay = 0, duration = 0.5, className = "", isChild =
   );
 };
 
-export default FadeIn;
+export default ScaleIn;

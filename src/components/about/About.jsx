@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BrainCircuit, Code2, Database } from 'lucide-react';
-import SlideUp from '../animations/SlideUp';
-import StaggerContainer from '../animations/StaggerContainer';
+
+import SlideUp from '@/components/animations/SlideUp';
+import StaggerContainer from '@/components/animations/StaggerContainer';
+import SectionHeader from '@/components/common/SectionHeader';
+import GlassCard from '@/components/ui/GlassCard';
 
 const About = () => {
   const shouldReduce = useReducedMotion();
@@ -20,14 +23,7 @@ const About = () => {
     <section id="about" className="py-24 relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         
-        <SlideUp>
-          <div className="mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">01.</span> About Me
-            </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-transparent rounded-full"></div>
-          </div>
-        </SlideUp>
+        <SectionHeader number="01." title="About Me" />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
@@ -62,29 +58,29 @@ const About = () => {
           {/* Cards (Staggered Entrance) */}
           <StaggerContainer delayChildren={0.2} staggerChildren={0.15}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <motion.div variants={cardVariants} className="glass-card p-6 flex flex-col gap-4">
+              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4">
                 <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                   <BrainCircuit size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-white">AI / ML</h3>
                 <p className="text-sm text-gray-400">Deep Learning, NLP, Predictive Modeling, Data Pipelines.</p>
-              </motion.div>
+              </GlassCard>
               
-              <motion.div variants={cardVariants} className="glass-card p-6 flex flex-col gap-4 mt-0 sm:mt-8">
+              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4 mt-0 sm:mt-8">
                 <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
                   <Code2 size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-white">Frontend</h3>
                 <p className="text-sm text-gray-400">React, Next.js, Tailwind CSS, Framer Motion.</p>
-              </motion.div>
+              </GlassCard>
               
-              <motion.div variants={cardVariants} className="glass-card p-6 flex flex-col gap-4 sm:col-span-2">
+              <GlassCard as={motion.div} variants={cardVariants} className="p-6 flex flex-col gap-4 sm:col-span-2">
                 <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
                   <Database size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-white">Backend & Ops</h3>
                 <p className="text-sm text-gray-400">Python, Node.js, REST APIs, Vector Databases, Deployment.</p>
-              </motion.div>
+              </GlassCard>
             </div>
           </StaggerContainer>
         </div>
