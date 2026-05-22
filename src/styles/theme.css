@@ -51,6 +51,19 @@
   }
 }
 
+@keyframes grid-slow {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 80px 80px;
+  }
+}
+
+.animate-grid-slow {
+  animation: grid-slow 30s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
