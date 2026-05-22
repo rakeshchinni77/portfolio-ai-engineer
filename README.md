@@ -1,16 +1,49 @@
-# React + Vite
+# Cinematic AI Engineering Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, interactive AI engineer capability dashboard and portfolio. Designed with a futuristic dark aesthetic, glassmorphism, signal pathways, and premium interactive terminals.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Security & Credentials
 
-## React Compiler
+> [!IMPORTANT]
+> **Environment Variables & Secrets Protection**
+> This repository uses environment variables to store sensitive keys and API credentials (such as EmailJS integration keys).
+> 
+> - **Exclusion from Version Control:** The configuration file `.env` contains live production secrets and is **intentionally excluded** from version control (defined in `.gitignore`) to prevent accidental leaks.
+> - **Local Development:** When setting up this project locally, you must create your own `.env` file at the root level.
+> - **Configuration Template:** Refer to `.env.example` for the list of required key mappings.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Setting up Environment Variables
 
-## Expanding the ESLint configuration
+1. Copy the `.env.example` template to create your local `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Populate the `.env` file with your credentials from the EmailJS dashboard:
+   ```env
+   VITE_EMAILJS_SERVICE_ID=your_service_id_here
+   VITE_EMAILJS_TEMPLATE_ID=your_template_id_here
+   VITE_EMAILJS_PUBLIC_KEY=your_public_key_here
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Local Setup & Development
+
+1. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+2. **Run Development Server:**
+   ```bash
+   npm run dev
+   ```
+3. **Build for Production:**
+   ```bash
+   npm run build
+   ```
+4. **Linting Check:**
+   ```bash
+   npm run lint
+   ```

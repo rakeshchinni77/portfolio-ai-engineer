@@ -1,6 +1,3 @@
-import React from 'react';
-import { Mail } from 'lucide-react';
-import { FaGithub, FaLinkedin } from 'react-icons/fa';
 import { socials } from '@/constants/socials';
 
 const Footer = () => {
@@ -16,15 +13,38 @@ const Footer = () => {
         </div>
         
         <div className="flex space-x-6">
-          <a href={socials.github} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-white transition-colors">
-            <FaGithub size={24} />
-          </a>
-          <a href={socials.linkedin} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-secondary transition-colors">
-            <FaLinkedin size={24} />
-          </a>
-          <a href={`mailto:${socials.email}`} className="text-gray-400 hover:text-primary transition-colors">
-            <Mail size={24} />
-          </a>
+          {socials.links.map((link) => {
+            const Icon = link.icon;
+            const isExternal = !link.url.startsWith('mailto:');
+            
+            // Color-specific hover classes for subtle glow & brand color
+            let hoverStyle = '';
+            let ariaLabel = '';
+            
+            if (link.name.toLowerCase() === 'github') {
+              hoverStyle = 'hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]';
+              ariaLabel = "Visit Chinni Rakesh's GitHub Profile";
+            } else if (link.name.toLowerCase() === 'linkedin') {
+              hoverStyle = 'hover:text-secondary hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]';
+              ariaLabel = "Visit Chinni Rakesh's LinkedIn Profile";
+            } else if (link.name.toLowerCase() === 'email') {
+              hoverStyle = 'hover:text-primary hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)]';
+              ariaLabel = "Send an email to Chinni Rakesh";
+            }
+
+            return (
+              <a
+                key={link.name}
+                href={link.url}
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
+                aria-label={ariaLabel}
+                className={`text-gray-400 opacity-80 hover:opacity-100 transition-all duration-300 ease-out hover:-translate-y-1 hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md p-1 ${hoverStyle}`}
+              >
+                <Icon size={24} />
+              </a>
+            );
+          })}
         </div>
       </div>
       <div className="mt-8 text-center text-gray-500 text-sm">
