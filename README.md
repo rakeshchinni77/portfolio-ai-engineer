@@ -31,11 +31,28 @@ The entire portfolio is compiled and optimized for production-grade web vitals, 
 
 ## 🖥️ System Previews
 
-### Desktop Showcase Interface
-![Desktop View Preview](public/images/previews/desktop_preview.png)
+<div align="center">
 
-### Mobile Optimized Interface
-![Mobile View Preview](public/images/previews/mobile_preview.png)
+<h3>Desktop Showcase Interface</h3>
+
+<img 
+  src="./public/images/previews/desktop_preview.png" 
+  alt="Desktop Preview"
+  width="900"
+/>
+
+<br/>
+<br/>
+
+<h3>Mobile Optimized Interface</h3>
+
+<img 
+  src="./public/images/previews/mobile_preview.png" 
+  alt="Mobile Preview"
+  width="300"
+/>
+
+</div>
 
 ---
 
