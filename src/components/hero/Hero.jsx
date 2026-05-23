@@ -277,6 +277,31 @@ const Hero = () => {
         </div>
       )}
 
+      {/* Mobile Floating Technology Elements (Pure CSS animation, no Framer Motion, unmounted on prefers-reduced-motion) */}
+      {isMobile && !shouldReduce && (
+        <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+          {/* Top-left: Python */}
+          <div className="absolute top-[16%] left-[8%] p-2.5 glass rounded-full opacity-20 animate-float-mobile-slow-1">
+            <FaPython className="text-lg text-secondary" />
+          </div>
+
+          {/* Top-right: React */}
+          <div className="absolute top-[22%] right-[8%] p-2.5 glass rounded-full opacity-20 animate-float-mobile-slow-2">
+            <FaReact className="text-lg text-secondary" />
+          </div>
+
+          {/* Lower-left: PyTorch */}
+          <div className="absolute bottom-[38%] left-[8%] p-2.5 glass rounded-full opacity-20 animate-float-mobile-slow-3">
+            <SiPytorch className="text-lg text-secondary" />
+          </div>
+
+          {/* Lower-right: Docker */}
+          <div className="absolute bottom-[20%] right-[8%] p-2.5 glass rounded-full opacity-20 animate-float-mobile-slow-4">
+            <FaDocker className="text-lg text-secondary" />
+          </div>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <motion.div 
         style={{ y: shouldReduce ? 0 : contentY, opacity: opacityFade }}

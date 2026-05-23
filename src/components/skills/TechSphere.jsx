@@ -3,6 +3,7 @@ import { useReducedMotion } from 'framer-motion';
 import { Brain, Database } from 'lucide-react';
 import { FaPython, FaReact, FaDocker, FaGithub } from 'react-icons/fa';
 import { SiTensorflow, SiPytorch, SiFastapi, SiHuggingface } from 'react-icons/si';
+import { cn } from '@/utils/cn';
 
 const techItems = [
   { name: 'Python', icon: FaPython, color: '#3776AB', radius: 120, tilt: 0, speed: 0.007, phase: 0 },
@@ -39,7 +40,9 @@ const TechSphere = () => {
 
   // Handle visibility changes and intersection observer to pause updates when tab is hidden or element is out of viewport
   useEffect(() => {
-    // Completely pause animation on mobile devices or if user prefers reduced motion
+    // Performance Hardening: Completely pause requestAnimationFrame loop on mobile devices (< 768px)
+    // or if the user prefers reduced motion to ensure Lighthouse scores remain >= 85.
+    // CSS-based animations will handle mobile orbiting with 0% CPU cycles.
     if (shouldReduce || isMobile) {
       Promise.resolve().then(() => {
         setIsAnimating(false);
@@ -135,7 +138,8 @@ const TechSphere = () => {
         el.style.transform = `translate(-50%, -50%) scale(${scale})`;
         el.style.opacity = opacity;
         el.style.zIndex = zIndex;
-        if (!shouldReduce) {
+        // Optimization: Disable blur filters on mobile to protect rendering efficiency
+        if (!shouldReduce && !isMobile) {
           el.style.filter = `blur(${blurValue}px)`;
         } else {
           el.style.filter = 'none';
@@ -185,52 +189,58 @@ const TechSphere = () => {
         
         {/* Core Card */}
         <div className="relative w-16 h-16 rounded-full bg-black/40 border border-white/10 flex items-center justify-center shadow-[0_0_25px_rgba(139,92,246,0.2)] backdrop-blur-md">
-          <Brain className="w-8 h-8 text-primary-light animate-pulse" />
+          {/* Optimization: Disable Brain icon pulse animation on mobile */}
+          <Brain className={cn("w-8 h-8 text-primary-light", !isMobile && "animate-pulse")} />
         </div>
         <span className="text-[10px] font-mono tracking-widest text-gray-400 mt-3 font-semibold bg-white/5 border border-white/5 px-2 py-0.5 rounded-full">
           AI CORE
         </span>
       </div>
 
-      {/* Orbiting Tech Items (Styles initialized and manipulated directly via refs) */}
-      {techItems.map((item, idx) => {
-        const Icon = item.icon;
-        
-        return (
-          <div
-            key={item.name}
-            ref={el => itemRefs.current[idx] = el}
-            style={{
-              position: 'absolute',
-              left: '50%',
-              top: '50%',
-              transform: 'translate(-50%, -50%) scale(1)',
-              opacity: 0,
-              pointerEvents: 'none',
-              transition: 'filter 0.3s ease'
-            }}
-            className="flex flex-col items-center gap-1.5"
-          >
-            {/* Tech Node Badge */}
-            <div 
-              style={{ 
-                borderColor: `${item.color}33`,
-                boxShadow: `0 0 15px ${item.color}15, inset 0 1px 1px rgba(255, 255, 255, 0.05)`
+      {/* Orbiting Tech Items wrapper (Uses CSS rotation on mobile for performance safety) */}
+      <div className={cn("absolute inset-0 pointer-events-none z-20", isMobile && "animate-orbit-mobile-wrapper")}>
+        {techItems.map((item, idx) => {
+          const Icon = item.icon;
+          
+          return (
+            <div
+              key={item.name}
+              ref={el => itemRefs.current[idx] = el}
+              style={{
+                position: 'absolute',
+                left: '50%',
+                top: '50%',
+                transform: 'translate(-50%, -50%) scale(1)',
+                opacity: 0,
+                pointerEvents: 'none',
+                transition: 'filter 0.3s ease'
               }}
-              className="w-10 h-10 rounded-xl bg-black/60 border flex items-center justify-center backdrop-blur-md"
+              className="flex flex-col items-center gap-1.5"
             >
-              <Icon style={{ color: item.color }} className="w-5 h-5" />
-            </div>
+              {/* Inner wrapper that counter-rotates on mobile to keep icons/text upright */}
+              <div className={cn("flex flex-col items-center gap-1.5", isMobile && "animate-orbit-mobile-node")}>
+                {/* Tech Node Badge */}
+                <div 
+                  style={{ 
+                    borderColor: `${item.color}33`,
+                    boxShadow: `0 0 15px ${item.color}15, inset 0 1px 1px rgba(255, 255, 255, 0.05)`
+                  }}
+                  className="w-10 h-10 rounded-xl bg-black/60 border flex items-center justify-center backdrop-blur-md"
+                >
+                  <Icon style={{ color: item.color }} className="w-5 h-5" />
+                </div>
 
-            {/* Micro Badge Text */}
-            <span 
-              className="text-[8px] font-mono text-gray-400 bg-black/80 px-1.5 py-0.5 rounded border border-white/5 shadow-md pointer-events-none"
-            >
-              {item.name}
-            </span>
-          </div>
-        );
-      })}
+                {/* Micro Badge Text */}
+                <span 
+                  className="text-[8px] font-mono text-gray-400 bg-black/80 px-1.5 py-0.5 rounded border border-white/5 shadow-md pointer-events-none"
+                >
+                  {item.name}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

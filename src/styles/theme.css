@@ -399,3 +399,72 @@
     inset 0 1px 1px rgba(255, 255, 255, 0.03);
   background: rgba(15, 10, 45, 0.55);
 }
+
+/* Lightweight mobile-optimized float animations (CSS only, compositor-thread accelerated) */
+.animate-float-mobile-slow-1 {
+  animation: float-mobile-1 8s ease-in-out infinite;
+}
+.animate-float-mobile-slow-2 {
+  animation: float-mobile-2 9s ease-in-out infinite;
+  animation-delay: 1.5s;
+}
+.animate-float-mobile-slow-3 {
+  animation: float-mobile-3 7.5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+.animate-float-mobile-slow-4 {
+  animation: float-mobile-4 8.5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+@keyframes float-mobile-1 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes float-mobile-2 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes float-mobile-3 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes float-mobile-4 {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-mobile-slow-1,
+  .animate-float-mobile-slow-2,
+  .animate-float-mobile-slow-3,
+  .animate-float-mobile-slow-4 {
+    animation: none !important;
+  }
+}
+
+/* TechSphere Mobile Orbit CSS Animations (Compositor-thread only, 0% CPU impact) */
+.animate-orbit-mobile-wrapper {
+  animation: orbit-mobile-clockwise 30s linear infinite;
+}
+
+.animate-orbit-mobile-node {
+  animation: orbit-mobile-counter-clockwise 30s linear infinite;
+}
+
+@keyframes orbit-mobile-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-mobile-counter-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-orbit-mobile-wrapper,
+  .animate-orbit-mobile-node {
+    animation: none !important;
+  }
+}
