@@ -6,12 +6,12 @@
 [![Vite](https://img.shields.io/badge/Vite-8.0.10-646CFF?style=flat-square&logo=vite&logoColor=white&labelColor=0d0b21)](https://vite.dev)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.19-38B2AC?style=flat-square&logo=tailwindcss&logoColor=38B2AC&labelColor=0d0b21)](https://tailwindcss.com)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12.38.0-f107a3?style=flat-square&logo=framer&logoColor=f107a3&labelColor=0d0b21)](https://framer.com/motion)
-[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=flat-square&logo=vercel&logoColor=white&labelColor=0d0b21)](https://rakeshchinni.dev)
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-Deployed-000000?style=flat-square&logo=vercel&logoColor=white&labelColor=0d0b21)](https://portfolio-ai-engineer.vercel.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square&labelColor=0d0b21)](https://opensource.org/licenses/MIT)
 
 An enterprise-grade, high-performance capability showcase and interactive dashboard for an AI & Full-Stack Engineer. Designed with a futuristic dark aesthetic, glassmorphic UI elements, dynamic signal pathways, and premium interactive terminals. Built with React 19, Vite, Tailwind CSS, and Framer Motion.
 
-🔗 **[Live Production Deployment](https://rakeshchinni.dev/)**  
+🔗 **[Live Production Deployment](https://portfolio-ai-engineer.vercel.app/)**  
 🔗 **[GitHub Source Repository](https://github.com/rakeshchinni77/portfolio-ai-engineer)**
 
 ---
