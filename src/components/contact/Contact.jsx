@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Mail, Clock, Briefcase, Send, CheckCircle, Globe } from 'lucide-react';
 import emailjs from '@emailjs/browser';
@@ -6,6 +6,14 @@ import SectionHeader from '@/components/common/SectionHeader';
 
 const Contact = () => {
   const shouldReduce = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // States
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -103,8 +111,10 @@ const Contact = () => {
 
   return (
     <section id="contact" className="py-16 relative overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute bottom-[-10%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-gradient-radial from-primary/5 to-transparent pointer-events-none"></div>
+      {/* Background radial glow (Unmounted on mobile) */}
+      {!isMobile && (
+        <div className="absolute bottom-[-10%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-gradient-radial from-primary/5 to-transparent pointer-events-none"></div>
+      )}
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <SectionHeader 

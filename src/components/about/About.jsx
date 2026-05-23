@@ -58,6 +58,7 @@ const About = () => {
                     width={160}
                     height={160}
                     loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
                     onError={(e) => { e.target.src = aboutData.fallbackImage }} 
                   />

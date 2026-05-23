@@ -27,6 +27,8 @@ const TechSphere = () => {
   const targetMousePosRef = useRef({ x: 0, y: 0 });
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const inViewRef = useRef(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -34,6 +36,40 @@ const TechSphere = () => {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Handle visibility changes and intersection observer to pause updates when tab is hidden or element is out of viewport
+  useEffect(() => {
+    // Completely pause animation on mobile devices or if user prefers reduced motion
+    if (shouldReduce || isMobile) {
+      Promise.resolve().then(() => {
+        setIsAnimating(false);
+      });
+      return;
+    }
+
+    const checkActive = () => {
+      const visible = document.visibilityState === 'visible';
+      const inView = inViewRef.current;
+      setIsAnimating(visible && inView);
+    };
+
+    const observer = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+      checkActive();
+    }, { threshold: 0.05 });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    const handleVis = () => checkActive();
+    document.addEventListener('visibilitychange', handleVis);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', handleVis);
+    };
+  }, [shouldReduce, isMobile]);
 
   // Handle mouse move for parallax
   const handleMouseMove = (e) => {
@@ -51,8 +87,6 @@ const TechSphere = () => {
 
   // Animation Loop (Orbit + Mouse Easing via Direct DOM Manipulation)
   useEffect(() => {
-    let animFrame;
-    
     const update = () => {
       // Ease mouse position for organic delay feel
       if (!isMobile) {
@@ -107,25 +141,27 @@ const TechSphere = () => {
           el.style.filter = 'none';
         }
       });
-
-      if (!shouldReduce) {
-        animFrame = requestAnimationFrame(update);
-      }
     };
 
-    // Run once to initialize styling even if shouldReduce is true
+    // Run once to initialize styling even if animation is paused
     update();
 
-    if (!shouldReduce) {
-      animFrame = requestAnimationFrame(update);
-    }
+    if (!isAnimating) return;
+
+    let animFrame;
+    const loop = () => {
+      update();
+      animFrame = requestAnimationFrame(loop);
+    };
+
+    animFrame = requestAnimationFrame(loop);
     
     return () => {
       if (animFrame) {
         cancelAnimationFrame(animFrame);
       }
     };
-  }, [shouldReduce, isMobile]);
+  }, [isAnimating, shouldReduce, isMobile]);
 
   return (
     <div 
@@ -134,11 +170,11 @@ const TechSphere = () => {
       onMouseLeave={handleMouseLeave}
       className="relative w-full aspect-square max-w-[340px] md:max-w-[400px] mx-auto flex items-center justify-center dashboard-card p-6 border-white/5 rounded-3xl bg-[#09061a]/30 backdrop-blur-xl shadow-glow-primary/10 overflow-hidden cursor-pointer select-none group/sphere"
     >
-      {/* Moving Grid Background */}
-      <div className="absolute inset-0 bg-grid opacity-10 animate-grid-slow pointer-events-none" />
+      {/* Moving Grid Background (Disabled on mobile to save CPU/GPU) */}
+      <div className={`absolute inset-0 bg-grid opacity-10 pointer-events-none ${!isMobile ? 'animate-grid-slow' : ''}`} />
       
       {/* Outer subtle glowing ring */}
-      <div className="absolute w-4/5 h-4/5 rounded-full border border-white/5 pointer-events-none flex items-center justify-center animate-spin" style={{ animationDuration: '60s' }}>
+      <div className={`absolute w-4/5 h-4/5 rounded-full border border-white/5 pointer-events-none flex items-center justify-center ${!isMobile ? 'animate-spin' : ''}`} style={{ animationDuration: '60s' }}>
         <div className="absolute top-0 w-2 h-2 rounded-full bg-secondary/30 blur-[2px]" />
       </div>
 

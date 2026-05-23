@@ -7,6 +7,7 @@ import { SiTensorflow, SiPytorch, SiFastapi } from 'react-icons/si';
 import { heroData } from '@/constants/heroData';
 import FloatingElement from '@/components/animations/FloatingElement';
 import Button from '@/components/ui/Button';
+import { cn } from '@/utils/cn';
 
 const ambientParticles = [
   { id: 1, size: 2, top: "20%", left: "15%", delay: 0.2, duration: 12, depth: "far" },
@@ -21,7 +22,7 @@ const ambientParticles = [
 
 const Hero = () => {
   const [keywordIndex, setKeywordIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 640 : false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
   const [downloadStatus, setDownloadStatus] = useState('idle');
   const [showTooltip, setShowTooltip] = useState(false);
   const shouldReduce = useReducedMotion();
@@ -82,12 +83,12 @@ const Hero = () => {
 
   // Monitor resize to apply mobile optimization (slice particles list)
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const activeParticles = isMobile ? ambientParticles.slice(0, 3) : ambientParticles;
+  const activeParticles = isMobile ? [] : ambientParticles;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -105,7 +106,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: shouldReduce ? 0 : 0.8, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : (isMobile ? 0.4 : 0.8), ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -114,7 +115,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: shouldReduce ? 0 : 1.0, ease: [0.16, 1, 0.3, 1] }
+      transition: { duration: shouldReduce ? 0 : (isMobile ? 0.5 : 1.0), ease: [0.16, 1, 0.3, 1] }
     }
   };
 
@@ -123,7 +124,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: shouldReduce ? 0 : 0.8, ease: "easeOut" }
+      transition: { duration: shouldReduce ? 0 : (isMobile ? 0.4 : 0.8), ease: "easeOut" }
     }
   };
 
@@ -132,7 +133,7 @@ const Hero = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: shouldReduce ? 0 : 0.8, ease: "easeOut" }
+      transition: { duration: shouldReduce ? 0 : (isMobile ? 0.4 : 0.8), ease: "easeOut" }
     }
   };
 
@@ -146,63 +147,67 @@ const Hero = () => {
         style={{ y: shouldReduce ? 0 : gridY, opacity: shouldReduce ? 0.05 : opacityFade }} 
         className="absolute inset-0 z-0 pointer-events-none"
       >
-        <div className="absolute inset-0 bg-grid animate-grid-slow mask-radial-fade opacity-[0.07]"></div>
+        <div className={cn("absolute inset-0 bg-grid mask-radial-fade opacity-[0.07]", !isMobile && "animate-grid-slow")}></div>
       </motion.div>
 
-      {/* 4. Refined Orb Motion & Blur Profile Layers */}
-      <motion.div
-        style={{ 
-          y: shouldReduce ? 0 : orbY1, 
-          opacity: shouldReduce ? 0.06 : orbOpacity1 
-        }}
-        animate={shouldReduce ? {} : {
-          x: [-12, 12, -12],
-          y: [-15, 15, -15],
-          scale: [1, 1.06, 1]
-        }}
-        transition={shouldReduce ? {} : {
-          duration: 16,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute top-[8%] left-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none z-0"
-      />
+      {/* 4. Refined Orb Motion & Blur Profile Layers (Unmounted on mobile to optimize GPU) */}
+      {!isMobile && (
+        <>
+          <motion.div
+            style={{ 
+              y: shouldReduce ? 0 : orbY1, 
+              opacity: shouldReduce ? 0.06 : orbOpacity1 
+            }}
+            animate={shouldReduce ? {} : {
+              x: [-12, 12, -12],
+              y: [-15, 15, -15],
+              scale: [1, 1.06, 1]
+            }}
+            transition={shouldReduce ? {} : {
+              duration: 16,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-[8%] left-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none z-0"
+          />
 
-      <motion.div
-        style={{ 
-          y: shouldReduce ? 0 : orbY2, 
-          opacity: shouldReduce ? 0.06 : orbOpacity2 
-        }}
-        animate={shouldReduce ? {} : {
-          x: [15, -15, 15],
-          y: [12, -12, 12],
-          scale: [1.08, 0.95, 1.08]
-        }}
-        transition={shouldReduce ? {} : {
-          duration: 20,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute bottom-[8%] right-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-secondary/8 to-transparent pointer-events-none z-0"
-      />
+          <motion.div
+            style={{ 
+              y: shouldReduce ? 0 : orbY2, 
+              opacity: shouldReduce ? 0.06 : orbOpacity2 
+            }}
+            animate={shouldReduce ? {} : {
+              x: [15, -15, 15],
+              y: [12, -12, 12],
+              scale: [1.08, 0.95, 1.08]
+            }}
+            transition={shouldReduce ? {} : {
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute bottom-[8%] right-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-secondary/8 to-transparent pointer-events-none z-0"
+          />
 
-      <motion.div
-        style={{ 
-          y: shouldReduce ? 0 : orbY3, 
-          opacity: shouldReduce ? 0.04 : orbOpacity3 
-        }}
-        animate={shouldReduce ? {} : {
-          x: [10, -10, 10],
-          y: [-10, 10, -10],
-          scale: [0.95, 1.05, 0.95]
-        }}
-        transition={shouldReduce ? {} : {
-          duration: 24,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute top-[35%] left-[25%] w-[200px] md:w-[320px] h-[200px] md:h-[320px] rounded-full bg-gradient-radial from-indigo-500/6 to-transparent pointer-events-none z-0"
-      />
+          <motion.div
+            style={{ 
+              y: shouldReduce ? 0 : orbY3, 
+              opacity: shouldReduce ? 0.04 : orbOpacity3 
+            }}
+            animate={shouldReduce ? {} : {
+              x: [10, -10, 10],
+              y: [-10, 10, -10],
+              scale: [0.95, 1.05, 0.95]
+            }}
+            transition={shouldReduce ? {} : {
+              duration: 24,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-[35%] left-[25%] w-[200px] md:w-[320px] h-[200px] md:h-[320px] rounded-full bg-gradient-radial from-indigo-500/6 to-transparent pointer-events-none z-0"
+          />
+        </>
+      )}
 
       {/* 2 & 6. Floating Ambient Particles (lightweight, restricted on mobile) */}
       {!shouldReduce && activeParticles.map((p) => (
@@ -231,8 +236,8 @@ const Hero = () => {
         />
       ))}
 
-      {/* Floating Technology Elements (restrained parallax speeds, hidden on mobile) */}
-      {!shouldReduce && (
+      {/* Floating Technology Elements (restrained parallax speeds, completely disabled on mobile to optimize DOM & CPU) */}
+      {!(shouldReduce || isMobile) && (
         <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none hidden sm:block">
           <motion.div style={{ y: yPython, opacity: opacityFade }}>
             <FloatingElement className="top-[22%] left-[6%] md:left-[15%] p-3 md:p-4 glass rounded-full opacity-20 sm:opacity-30 blur-[0.5px] scale-90 hover:opacity-90 hover:scale-110 hover:shadow-glow-primary transition-all duration-300" delay={0} duration={7}>
@@ -283,26 +288,30 @@ const Hero = () => {
         {/* Status Badge */}
         <motion.div variants={badgeVariants} className="inline-flex items-center space-x-2 glass px-4 py-2 rounded-full mb-6 md:mb-8">
           <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+            {!isMobile && (
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+            )}
             <span className="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
           </span>
           <span className="text-sm font-mono text-gray-300">{heroData.badge}</span>
         </motion.div>
 
-        {/* Glow Pulse backdrop directly behind the heading */}
-        <motion.div
-          style={{ opacity: shouldReduce ? 0 : opacityFade }}
-          animate={shouldReduce ? {} : {
-            scale: [1, 1.08, 1],
-            opacity: [0.4, 0.6, 0.4]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="absolute -z-10 w-[240px] sm:w-[480px] h-[100px] sm:h-[160px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none"
-        />
+        {/* Glow Pulse backdrop directly behind the heading (Unmounted on mobile) */}
+        {!isMobile && (
+          <motion.div
+            style={{ opacity: shouldReduce ? 0 : opacityFade }}
+            animate={shouldReduce ? {} : {
+              scale: [1, 1.08, 1],
+              opacity: [0.4, 0.6, 0.4]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute -z-10 w-[240px] sm:w-[480px] h-[100px] sm:h-[160px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none"
+          />
+        )}
 
         {/* Main Heading with responsive font sizing */}
         <motion.h1 

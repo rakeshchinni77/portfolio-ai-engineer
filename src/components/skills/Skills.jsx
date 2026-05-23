@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { BrainCircuit, Cpu, Code2, Globe, Database, Server, Shield } from 'lucide-react';
 
@@ -20,6 +21,14 @@ const iconMap = {
 
 const Skills = () => {
   const shouldReduce = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const cardVariants = {
     hidden: { opacity: 0, y: shouldReduce ? 0 : 25 },
@@ -33,11 +42,15 @@ const Skills = () => {
   return (
     <section id="skills" className="py-20 relative overflow-hidden">
       {/* Cinematic Background Atmosphere */}
-      <div className="absolute inset-0 bg-grid opacity-[0.03] animate-grid-slow pointer-events-none" />
+      <div className={cn("absolute inset-0 bg-grid opacity-[0.03] pointer-events-none", !isMobile && "animate-grid-slow")} />
       
-      {/* Ambient Radial Lights */}
-      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
+      {/* Ambient Radial Lights (Unmounted on mobile to optimize layout painting) */}
+      {!isMobile && (
+        <>
+          <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
+          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
+        </>
+      )}
       
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         

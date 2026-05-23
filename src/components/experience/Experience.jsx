@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { experienceData } from '@/constants/experienceData';
 import SectionHeader from '@/components/common/SectionHeader';
@@ -5,6 +6,14 @@ import { cn } from '@/utils/cn';
 
 const Experience = () => {
   const shouldReduce = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const cardVariantsRight = {
     hidden: { opacity: 0, x: shouldReduce ? 0 : 30, y: shouldReduce ? 0 : 15 },
@@ -42,16 +51,20 @@ const Experience = () => {
       opacity: 1,
       transition: shouldReduce 
         ? { duration: 0 } 
-        : { type: "spring", stiffness: 180, damping: 12 }
+        : { duration: 0.4, ease: "easeOut" }
     }
   };
 
   return (
     <section id="experience" className="py-16 relative overflow-hidden">
       {/* Background Atmosphere Elements */}
-      <div className={cn("absolute inset-0 bg-grid opacity-[0.02] pointer-events-none", !shouldReduce && "animate-grid-slow")} />
-      <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/3 left-1/4 w-[450px] h-[450px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
+      <div className={cn("absolute inset-0 bg-grid opacity-[0.02] pointer-events-none", !shouldReduce && !isMobile && "animate-grid-slow")} />
+      {!isMobile && (
+        <>
+          <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
+          <div className="absolute bottom-1/3 left-1/4 w-[450px] h-[450px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
+        </>
+      )}
 
       <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
         
@@ -71,8 +84,8 @@ const Experience = () => {
               )}
             </div>
             
-            {/* Particles outside the overflow-hidden container so their glow isn't clipped */}
-            {!shouldReduce && (
+            {/* Particles outside the overflow-hidden container so their glow isn't clipped (Disabled on mobile) */}
+            {!(shouldReduce || isMobile) && (
               <>
                 {/* Subtle Neural Transmission Particles */}
                 <div className="absolute left-1/2 -translate-x-1/2 w-[3px] h-[3px] rounded-full bg-cyan-400 opacity-80 shadow-[0_0_8px_#06b6d4] animate-particle-down-1" />
@@ -104,16 +117,16 @@ const Experience = () => {
                   className={cn(
                     "flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-black/85 z-20 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-all duration-300",
                     isActive
-                      ? cn("border-primary/60 text-primary-light shadow-[0_0_22px_rgba(139,92,246,0.8)]", !shouldReduce && "animate-node-active")
+                      ? cn("border-primary/60 text-primary-light shadow-[0_0_22px_rgba(139,92,246,0.8)]", !shouldReduce && !isMobile && "animate-node-active")
                       : isPrimary 
-                        ? cn("border-primary/20 text-primary-light", !shouldReduce && "animate-node-primary") 
-                        : cn("border-secondary/20 text-secondary-light", !shouldReduce && "animate-node-secondary")
+                        ? cn("border-primary/20 text-primary-light", !shouldReduce && !isMobile && "animate-node-primary") 
+                        : cn("border-secondary/20 text-secondary-light", !shouldReduce && !isMobile && "animate-node-secondary")
                   )}
                 >
                   <div className={cn(
                     "rounded-full transition-colors shadow-md",
                     isActive 
-                      ? cn("w-[18px] h-[18px] bg-purple-400 shadow-[0_0_12px_#8b5cf6,0_0_24px_rgba(139,92,246,0.6)]", !shouldReduce && "animate-inner-pulse")
+                      ? cn("w-[18px] h-[18px] bg-purple-400 shadow-[0_0_12px_#8b5cf6,0_0_24px_rgba(139,92,246,0.6)]", !shouldReduce && !isMobile && "animate-inner-pulse")
                       : "w-2.5 h-2.5",
                     !isActive && (isPrimary ? "bg-primary" : "bg-secondary")
                   )} />
