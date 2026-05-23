@@ -165,7 +165,7 @@ const Hero = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[8%] left-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-primary/10 blur-[100px] pointer-events-none z-0"
+        className="absolute top-[8%] left-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none z-0"
       />
 
       <motion.div
@@ -183,7 +183,7 @@ const Hero = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute bottom-[8%] right-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-secondary/8 blur-[130px] pointer-events-none z-0"
+        className="absolute bottom-[8%] right-[8%] w-[260px] md:w-[420px] h-[260px] md:h-[420px] rounded-full bg-gradient-radial from-secondary/8 to-transparent pointer-events-none z-0"
       />
 
       <motion.div
@@ -201,7 +201,7 @@ const Hero = () => {
           repeat: Infinity,
           ease: "easeInOut"
         }}
-        className="absolute top-[35%] left-[25%] w-[200px] md:w-[320px] h-[200px] md:h-[320px] rounded-full bg-indigo-500/6 blur-[80px] pointer-events-none z-0"
+        className="absolute top-[35%] left-[25%] w-[200px] md:w-[320px] h-[200px] md:h-[320px] rounded-full bg-gradient-radial from-indigo-500/6 to-transparent pointer-events-none z-0"
       />
 
       {/* 2 & 6. Floating Ambient Particles (lightweight, restricted on mobile) */}
@@ -301,7 +301,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute -z-10 w-[240px] sm:w-[480px] h-[100px] sm:h-[160px] rounded-full bg-primary/10 blur-[85px] pointer-events-none"
+          className="absolute -z-10 w-[240px] sm:w-[480px] h-[100px] sm:h-[160px] rounded-full bg-gradient-radial from-primary/10 to-transparent pointer-events-none"
         />
 
         {/* Main Heading with responsive font sizing */}

@@ -50,8 +50,8 @@ const Experience = () => {
     <section id="experience" className="py-16 relative overflow-hidden">
       {/* Background Atmosphere Elements */}
       <div className={cn("absolute inset-0 bg-grid opacity-[0.02] pointer-events-none", !shouldReduce && "animate-grid-slow")} />
-      <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-secondary/5 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/3 left-1/4 w-[450px] h-[450px] bg-primary/5 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[450px] h-[450px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/3 left-1/4 w-[450px] h-[450px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
 
       <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
         

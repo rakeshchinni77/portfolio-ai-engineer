@@ -29,7 +29,7 @@ const Navbar = () => {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-gray-300 hover:text-white hover:text-shadow-glow-primary transition-all"
+              className="text-sm font-medium text-gray-300 hover:text-white hover:text-shadow-glow-primary focus-visible:outline-none focus-visible:text-white focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded px-2 py-1 transition-all"
             >
               {link.name}
             </a>
@@ -38,8 +38,10 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-gray-300 hover:text-white"
+          className="md:hidden text-gray-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md p-1"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileMenuOpen}
         >
           {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -53,7 +55,7 @@ const Navbar = () => {
               key={link.name}
               href={link.href}
               onClick={() => setMobileMenuOpen(false)}
-              className="text-lg font-medium text-gray-300 hover:text-white"
+              className="text-lg font-medium text-gray-300 hover:text-white focus-visible:outline-none focus-visible:text-white focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md px-3 py-1"
             >
               {link.name}
             </a>

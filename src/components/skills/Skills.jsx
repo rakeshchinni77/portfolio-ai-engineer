@@ -36,8 +36,8 @@ const Skills = () => {
       <div className="absolute inset-0 bg-grid opacity-[0.03] animate-grid-slow pointer-events-none" />
       
       {/* Ambient Radial Lights */}
-      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/3 w-[500px] h-[500px] bg-gradient-radial from-primary/5 to-transparent rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-gradient-radial from-secondary/5 to-transparent rounded-full pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         

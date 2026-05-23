@@ -1,7 +1,7 @@
 export const aboutData = {
   title: "About Me",
   number: "01.",
-  profileImage: "/images/profile.png",
+  profileImage: "/images/profile.webp",
   fallbackImage: "https://via.placeholder.com/150/030014/8b5cf6?text=Profile",
   description: [
     "I am an AI/ML student with a strong foundation in building scalable, intelligent applications. My passion lies in merging cutting-edge machine learning models with modern, interactive web interfaces.",

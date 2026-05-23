@@ -417,6 +417,9 @@ const Projects = () => {
                       <img 
                         src={project.image} 
                         alt={project.title} 
+                        width={600}
+                        height={380}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       />
                       {/* Depth overlay that deepens on card hover */}
@@ -479,7 +482,7 @@ const Projects = () => {
                       href={project.github}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative overflow-visible flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium text-gray-300 bg-white/5 border border-white/10 hover:border-cyan-500/30 hover:text-cyan-400 transition-all duration-300 group/btn"
+                      className="relative overflow-visible flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium text-gray-300 bg-white/5 border border-white/10 hover:border-cyan-500/30 hover:text-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all duration-300 group/btn"
                       whileHover="hover"
                     >
                       <FaGithub size={14} className="group-hover/btn:scale-110 transition-transform" />
@@ -502,7 +505,7 @@ const Projects = () => {
                         href={project.live}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium text-gray-300 bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:text-emerald-400 transition-all duration-300"
+                        className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-medium text-gray-300 bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:text-emerald-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all duration-300"
                       >
                         <ExternalLink size={14} />
                         <span>Live</span>
@@ -542,7 +545,7 @@ const Projects = () => {
               <div className="flex items-center justify-between px-4 py-3 bg-[#070514] border-b border-white/5 font-mono text-xs">
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1.5">
-                    <button onClick={() => setActiveArchProject(null)} className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 transition-colors" title="Close" />
+                    <button onClick={() => setActiveArchProject(null)} className="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors" title="Close" aria-label="Close modal" />
                     <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
                     <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
                   </div>
@@ -554,7 +557,8 @@ const Projects = () => {
                 
                 <button 
                   onClick={() => setActiveArchProject(null)}
-                  className="text-gray-500 hover:text-white p-1 rounded-md transition-colors"
+                  className="text-gray-500 hover:text-white p-1 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+                  aria-label="Close modal"
                 >
                   <X size={16} />
                 </button>
@@ -565,7 +569,7 @@ const Projects = () => {
                 <button
                   onClick={() => setActiveTab('diagram')}
                   className={cn(
-                    "px-3 py-1.5 rounded-md transition-all duration-200 border",
+                    "px-3 py-1.5 rounded-md transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     activeTab === 'diagram' 
                       ? "bg-primary/10 border-primary/30 text-white" 
                       : "bg-transparent border-transparent text-gray-400 hover:text-white"
@@ -577,7 +581,7 @@ const Projects = () => {
                 <button
                   onClick={() => setActiveTab('spec')}
                   className={cn(
-                    "px-3 py-1.5 rounded-md transition-all duration-200 border",
+                    "px-3 py-1.5 rounded-md transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     activeTab === 'spec' 
                       ? "bg-primary/10 border-primary/30 text-white" 
                       : "bg-transparent border-transparent text-gray-400 hover:text-white"
@@ -589,7 +593,7 @@ const Projects = () => {
                 <button
                   onClick={() => setActiveTab('logs')}
                   className={cn(
-                    "px-3 py-1.5 rounded-md transition-all duration-200 border",
+                    "px-3 py-1.5 rounded-md transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     activeTab === 'logs' 
                       ? "bg-primary/10 border-primary/30 text-white" 
                       : "bg-transparent border-transparent text-gray-400 hover:text-white"

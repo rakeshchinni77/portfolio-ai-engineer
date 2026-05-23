@@ -8,7 +8,7 @@ const Button = ({
   as: Component = 'button',
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none disabled:opacity-50 disabled:pointer-events-none';
+  const baseStyles = 'inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:opacity-50 disabled:pointer-events-none';
   
   const variants = {
     primary: 'bg-primary text-white hover:bg-primary/80 shadow-glow-primary rounded-lg',

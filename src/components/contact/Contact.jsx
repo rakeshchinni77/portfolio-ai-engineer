@@ -104,7 +104,7 @@ const Contact = () => {
   return (
     <section id="contact" className="py-16 relative overflow-hidden">
       {/* Background radial glow */}
-      <div className="absolute bottom-[-10%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-primary/5 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] left-[50%] -translate-x-1/2 w-[60%] h-[40%] rounded-full bg-gradient-radial from-primary/5 to-transparent pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
         <SectionHeader 

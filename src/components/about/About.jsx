@@ -55,6 +55,9 @@ const About = () => {
                   <img 
                     src={aboutData.profileImage} 
                     alt={aboutData.title} 
+                    width={160}
+                    height={160}
+                    loading="lazy"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
                     onError={(e) => { e.target.src = aboutData.fallbackImage }} 
                   />

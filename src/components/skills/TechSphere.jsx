@@ -19,51 +19,113 @@ const techItems = [
 
 const TechSphere = () => {
   const containerRef = useRef(null);
+  const itemRefs = useRef([]);
   const shouldReduce = useReducedMotion();
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [targetMousePos, setTargetMousePos] = useState({ x: 0, y: 0 });
-  const [angles, setAngles] = useState(techItems.map(item => item.phase));
+  
+  const anglesRef = useRef(techItems.map(item => item.phase));
+  const mousePosRef = useRef({ x: 0, y: 0 });
+  const targetMousePosRef = useRef({ x: 0, y: 0 });
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Handle mouse move for parallax
   const handleMouseMove = (e) => {
-    if (shouldReduce) return;
-    const rect = containerRef.current.getBoundingClientRect();
+    if (shouldReduce || isMobile) return;
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTargetMousePos({ x, y });
+    targetMousePosRef.current = { x, y };
   };
 
   const handleMouseLeave = () => {
-    setTargetMousePos({ x: 0, y: 0 });
+    targetMousePosRef.current = { x: 0, y: 0 };
   };
 
-  // Animation Loop (Orbit + Mouse Easing)
+  // Animation Loop (Orbit + Mouse Easing via Direct DOM Manipulation)
   useEffect(() => {
-    if (shouldReduce) return;
-
     let animFrame;
     
     const update = () => {
       // Ease mouse position for organic delay feel
-      setMousePos(prev => ({
-        x: prev.x + (targetMousePos.x - prev.x) * 0.08,
-        y: prev.y + (targetMousePos.y - prev.y) * 0.08
-      }));
+      if (!isMobile) {
+        mousePosRef.current.x += (targetMousePosRef.current.x - mousePosRef.current.x) * 0.08;
+        mousePosRef.current.y += (targetMousePosRef.current.y - mousePosRef.current.y) * 0.08;
+      } else {
+        mousePosRef.current = { x: 0, y: 0 };
+      }
 
-      // Increment angles
-      setAngles(prev => 
-        prev.map((angle, idx) => {
-          const item = techItems[idx];
-          return angle + item.speed;
-        })
-      );
+      // Increment angles (slowed down on mobile to save CPU/GPU)
+      const speedMultiplier = isMobile ? 0.4 : 1.0;
+      anglesRef.current = anglesRef.current.map((angle, idx) => {
+        return angle + techItems[idx].speed * speedMultiplier;
+      });
 
-      animFrame = requestAnimationFrame(update);
+      // Render updates directly to DOM styles (avoids 60 React re-renders per second)
+      techItems.forEach((item, idx) => {
+        const el = itemRefs.current[idx];
+        if (!el) return;
+
+        const angle = anglesRef.current[idx];
+        const rad = angle;
+        const tiltRad = (item.tilt * Math.PI) / 180;
+
+        // 3D coordinates on virtual sphere
+        const X = item.radius * Math.cos(rad);
+        const yFlat = item.radius * Math.sin(rad);
+        
+        // Rotate around X-axis by tilt angle
+        const Y = yFlat * Math.cos(tiltRad);
+        const Z = yFlat * Math.sin(tiltRad);
+
+        // Project to 2D
+        const depth = (Z + item.radius) / (2 * item.radius);
+        const scale = 0.5 + depth * 0.6; // Scale ranges from 0.5 to 1.1
+        const opacity = 0.35 + depth * 0.65; // Opacity ranges from 0.35 to 1.0
+        const zIndex = Math.round(scale * 100);
+        const blurValue = shouldReduce ? 0 : Math.max(0, (1 - scale) * 4.5);
+
+        // Parallax translation based on depth scale
+        const xParallax = mousePosRef.current.x * 60 * scale;
+        const yParallax = mousePosRef.current.y * 60 * scale;
+
+        el.style.left = `calc(50% + ${X + xParallax}px)`;
+        el.style.top = `calc(50% + ${Y + yParallax}px)`;
+        el.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        el.style.opacity = opacity;
+        el.style.zIndex = zIndex;
+        if (!shouldReduce) {
+          el.style.filter = `blur(${blurValue}px)`;
+        } else {
+          el.style.filter = 'none';
+        }
+      });
+
+      if (!shouldReduce) {
+        animFrame = requestAnimationFrame(update);
+      }
     };
 
-    animFrame = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(animFrame);
-  }, [targetMousePos, shouldReduce]);
+    // Run once to initialize styling even if shouldReduce is true
+    update();
+
+    if (!shouldReduce) {
+      animFrame = requestAnimationFrame(update);
+    }
+    
+    return () => {
+      if (animFrame) {
+        cancelAnimationFrame(animFrame);
+      }
+    };
+  }, [shouldReduce, isMobile]);
 
   return (
     <div 
@@ -94,50 +156,22 @@ const TechSphere = () => {
         </span>
       </div>
 
-      {/* Orbiting Tech Items */}
+      {/* Orbiting Tech Items (Styles initialized and manipulated directly via refs) */}
       {techItems.map((item, idx) => {
-        const angle = angles[idx];
-        const rad = angle;
-        const tiltRad = (item.tilt * Math.PI) / 180;
-
-        // 3D coordinates on virtual sphere
-        const X = item.radius * Math.cos(rad);
-        const yFlat = item.radius * Math.sin(rad);
-        
-        // Rotate around X-axis by tilt angle
-        const Y = yFlat * Math.cos(tiltRad);
-        const Z = yFlat * Math.sin(tiltRad);
-
-        // Project to 2D
-        // Z values range from -radius to +radius. Normalize to 0.4 (back) - 1.1 (front)
-        const depth = (Z + item.radius) / (2 * item.radius);
-        const scale = 0.5 + depth * 0.6; // Scale ranges from 0.5 to 1.1
-        const opacity = 0.35 + depth * 0.65; // Opacity ranges from 0.35 to 1.0
-        const zIndex = Math.round(scale * 100);
-        const blurValue = shouldReduce ? 0 : Math.max(0, (1 - scale) * 4.5);
-
-        // Parallax translation based on depth scale (front items move more)
-        const xParallax = mousePos.x * 60 * scale;
-        const yParallax = mousePos.y * 60 * scale;
-
-        const left = `calc(50% + ${X + xParallax}px)`;
-        const top = `calc(50% + ${Y + yParallax}px)`;
-
         const Icon = item.icon;
-
+        
         return (
           <div
             key={item.name}
+            ref={el => itemRefs.current[idx] = el}
             style={{
               position: 'absolute',
-              left,
-              top,
-              transform: `translate(-50%, -50%) scale(${scale})`,
-              opacity,
-              zIndex,
-              filter: `blur(${blurValue}px)`,
-              transition: 'filter 0.3s ease',
-              pointerEvents: 'none'
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%) scale(1)',
+              opacity: 0,
+              pointerEvents: 'none',
+              transition: 'filter 0.3s ease'
             }}
             className="flex flex-col items-center gap-1.5"
           >
